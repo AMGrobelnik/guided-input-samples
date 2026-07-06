@@ -2,899 +2,469 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Guided run setup — input-box samples</title>
+<title>Guided setup + fork/resume — variants in your real UI</title>
 </head><body>
-<title>Guided run setup — input-box explorations</title>
+<title>Guided setup + fork/resume — variants in your real UI</title>
 <style>
+  /* Reproduces the app's real design language: warm cream ground, hairline
+     black borders, #1a1a2e ink, ReviewTypeList selected idiom, indigo "Guide
+     me", teal fork. No invented palette — these are the app's exact tokens. */
   :root{
-    --bg:#f6f7f9; --panel:#ffffff; --panel-2:#eef1f6; --inset:#f9fafc;
-    --ink:#141a24; --ink-soft:#515c6b; --ink-faint:#8a94a3;
-    --line:#e2e7ef; --line-2:#d3dae4;
-    --accent:#3453d6; --accent-2:#4a68ea; --accent-ink:#ffffff; --accent-soft:rgba(52,83,214,.10);
-    --ai:#7a4ff0; --ai-soft:rgba(122,79,240,.12); --ai-line:rgba(122,79,240,.35);
-    --ok:#0e9b6e; --ok-soft:rgba(14,155,110,.12);
-    --warn:#c07d1c; --warn-soft:rgba(192,125,28,.12);
-    --shadow:0 1px 2px rgba(16,24,40,.06), 0 8px 24px -12px rgba(16,24,40,.18);
-    --shadow-lg:0 24px 60px -24px rgba(16,24,40,.32);
-    --r:14px; --r-sm:9px;
+    --bg:#fbfaf8; --panel:#ffffff; --composer:rgba(255,253,250,0.85);
+    --ink:#1a1a2e; --muted:#8a8a9a; --muted2:#6b7280; --faint:#9ca3af; --ph:#b0b0be;
+    --line:rgba(0,0,0,.06); --line2:rgba(0,0,0,.08); --line-hover:rgba(0,0,0,.25);
+    --sel-border:#1a1a2e; --sel-bg:rgba(26,26,46,.04);
+    --send-inert:#e8e8ec;
+    --indigo-50:#eef2ff; --indigo-100:#e0e7ff; --indigo-200:#c7d2fe; --indigo-500:#6366f1; --indigo-600:#4f46e5; --indigo-700:#4338ca;
+    --teal:#0d9488; --slate600:#475569; --slate700:#334155;
     --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    --mono:ui-monospace,"SF Mono","JetBrains Mono","Cascadia Code",Menlo,Consolas,monospace;
+    --serif:ui-serif,Georgia,"Times New Roman",serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   }
-  @media (prefers-color-scheme:dark){
-    :root{
-      --bg:#0a0d13; --panel:#111621; --panel-2:#19202e; --inset:#0e131c;
-      --ink:#e9eef6; --ink-soft:#9aa6b8; --ink-faint:#657084;
-      --line:#212a3a; --line-2:#2c3547;
-      --accent:#5f7dff; --accent-2:#7089ff; --accent-ink:#0a0d13; --accent-soft:rgba(95,125,255,.14);
-      --ai:#a488ff; --ai-soft:rgba(164,136,255,.16); --ai-line:rgba(164,136,255,.4);
-      --ok:#2bd39a; --ok-soft:rgba(43,211,154,.15);
-      --warn:#e0a54c; --warn-soft:rgba(224,165,76,.15);
-      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
-      --shadow-lg:0 30px 70px -28px rgba(0,0,0,.8);
-    }
+  @media (prefers-color-scheme:dark){ /* the app screens are light; keep the mock light, just soften the page frame */
+    :root{ --frame:#0d0f13; }
   }
-  :root[data-theme="light"]{
-    --bg:#f6f7f9; --panel:#ffffff; --panel-2:#eef1f6; --inset:#f9fafc;
-    --ink:#141a24; --ink-soft:#515c6b; --ink-faint:#8a94a3;
-    --line:#e2e7ef; --line-2:#d3dae4;
-    --accent:#3453d6; --accent-2:#4a68ea; --accent-ink:#ffffff; --accent-soft:rgba(52,83,214,.10);
-    --ai:#7a4ff0; --ai-soft:rgba(122,79,240,.12); --ai-line:rgba(122,79,240,.35);
-    --ok:#0e9b6e; --ok-soft:rgba(14,155,110,.12); --warn:#c07d1c; --warn-soft:rgba(192,125,28,.12);
-    --shadow:0 1px 2px rgba(16,24,40,.06), 0 8px 24px -12px rgba(16,24,40,.18);
-    --shadow-lg:0 24px 60px -24px rgba(16,24,40,.32);
-  }
-  :root[data-theme="dark"]{
-    --bg:#0a0d13; --panel:#111621; --panel-2:#19202e; --inset:#0e131c;
-    --ink:#e9eef6; --ink-soft:#9aa6b8; --ink-faint:#657084;
-    --line:#212a3a; --line-2:#2c3547;
-    --accent:#5f7dff; --accent-2:#7089ff; --accent-ink:#0a0d13; --accent-soft:rgba(95,125,255,.14);
-    --ai:#a488ff; --ai-soft:rgba(164,136,255,.16); --ai-line:rgba(164,136,255,.4);
-    --ok:#2bd39a; --ok-soft:rgba(43,211,154,.15); --warn:#e0a54c; --warn-soft:rgba(224,165,76,.15);
-    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
-    --shadow-lg:0 30px 70px -28px rgba(0,0,0,.8);
-  }
-
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
-    line-height:1.55;-webkit-font-smoothing:antialiased;font-size:15px}
-  .wrap{max-width:1180px;margin:0 auto;padding:40px 22px 90px}
-  a{color:var(--accent)}
-  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;
-    color:var(--ink-faint)}
-  h1{font-size:clamp(1.7rem,3.4vw,2.5rem);line-height:1.08;letter-spacing:-.02em;margin:.5rem 0 0;
-    text-wrap:balance;font-weight:640}
-  h1 .g{background:linear-gradient(92deg,var(--accent),var(--ai));-webkit-background-clip:text;
-    background-clip:text;color:transparent}
-  .lede{max-width:66ch;color:var(--ink-soft);margin:.85rem 0 0;font-size:1.02rem}
+  html,body{margin:0}
+  body{background:var(--frame,#e9e7e2);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.5}
+  .wrap{max-width:760px;margin:0 auto;padding:26px 16px 120px}
 
-  /* header meta */
-  .meta{display:grid;grid-template-columns:1.35fr .95fr;gap:18px;margin-top:26px}
-  @media (max-width:820px){.meta{grid-template-columns:1fr}}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
-  .pad{padding:18px 18px}
-  .mlabel{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--ink-faint);margin-bottom:12px;display:flex;align-items:center;gap:8px}
-  .contract{display:flex;flex-wrap:wrap;gap:7px}
-  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 9px;border-radius:999px;border:1px solid var(--line-2);
-    color:var(--ink-soft);background:var(--inset);white-space:nowrap;display:inline-flex;gap:6px;align-items:center}
-  .chip b{color:var(--ink);font-weight:600}
-  .chip.k{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
-  .chip.kai{border-color:var(--ai-line);color:var(--ai);background:var(--ai-soft)}
-  .dotmark{width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block}
+  /* page header (neutral, not part of the app) */
+  .lead{color:#fff;margin-bottom:22px}
+  @media (prefers-color-scheme:light){ .lead{color:#2a2a33} }
+  :root[data-theme="light"] .lead{color:#2a2a33}
+  :root[data-theme="dark"] .lead{color:#fff}
+  .eyebrow{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;opacity:.65}
+  .lead h1{font-size:1.35rem;margin:.35rem 0 0;letter-spacing:-.01em;font-weight:640}
+  .lead p{margin:.5rem 0 0;font-size:.9rem;opacity:.8;max-width:60ch}
 
-  /* provider panel */
-  table.prov{width:100%;border-collapse:collapse;font-size:.86rem}
-  table.prov th{text-align:left;font-family:var(--mono);font-weight:500;font-size:.66rem;letter-spacing:.08em;
-    text-transform:uppercase;color:var(--ink-faint);padding:0 8px 8px;border-bottom:1px solid var(--line)}
-  table.prov td{padding:8px 8px;border-bottom:1px solid var(--line)}
-  table.prov tr:last-child td{border-bottom:0}
-  .lat{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;color:var(--ink)}
-  .pill{font-family:var(--mono);font-size:.66rem;padding:2px 7px;border-radius:999px;font-weight:600}
-  .pill.win{background:var(--ok-soft);color:var(--ok)}
-  .pill.na{background:var(--panel-2);color:var(--ink-faint)}
-  .prov-note{color:var(--ink-faint);font-size:.78rem;margin-top:10px;line-height:1.45}
+  /* variant card = a labelled frame that holds a real app screen */
+  .variant{margin-top:26px}
+  .vlabel{display:flex;align-items:baseline;gap:10px;margin:0 2px 8px;color:#fff}
+  :root[data-theme="light"] .vlabel{color:#2a2a33} :root[data-theme="dark"] .vlabel{color:#fff}
+  @media (prefers-color-scheme:light){ .vlabel{color:#2a2a33} }
+  .vnum{font-family:var(--mono);font-size:.72rem;opacity:.6}
+  .vname{font-weight:600;font-size:.98rem}
+  .vnote{font-size:.8rem;opacity:.7;margin:0 2px 10px;color:#fff}
+  :root[data-theme="light"] .vnote{color:#3a3a44} :root[data-theme="dark"] .vnote{color:#e8e8ee}
+  @media (prefers-color-scheme:light){ .vnote{color:#3a3a44} }
+  .tagreal{font-family:var(--mono);font-size:.6rem;letter-spacing:.05em;text-transform:uppercase;
+    border:1px solid rgba(255,255,255,.25);border-radius:5px;padding:2px 6px;opacity:.75}
 
-  /* section heads */
-  .sec{margin-top:48px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
-  .sec h2{font-size:1.28rem;margin:0;letter-spacing:-.01em;font-weight:620}
-  .sec p{margin:0;color:var(--ink-soft);font-size:.92rem}
-  .rule{height:1px;background:var(--line);margin:14px 0 0}
+  /* the app "screen" frame — warm cream ground like the real dashboard */
+  .screen{background:var(--bg);border-radius:18px;padding:22px 16px 26px;
+    box-shadow:0 10px 34px -18px rgba(0,0,0,.55);overflow:hidden}
+  .screen.tall{padding-top:30px}
 
-  /* gallery */
-  .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:20px;margin-top:22px}
-  @media (max-width:560px){.gallery{grid-template-columns:1fr}}
-  .variant{display:flex;flex-direction:column;overflow:hidden}
-  .vhead{padding:15px 16px 13px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:flex-start}
-  .vnum{font-family:var(--mono);font-size:.8rem;color:var(--accent);font-weight:600;padding-top:2px;
-    min-width:26px}
-  .vtitle{font-weight:600;font-size:1.02rem;letter-spacing:-.01em}
-  .vblurb{color:var(--ink-soft);font-size:.85rem;margin-top:2px}
-  .vtag{margin-left:auto;font-family:var(--mono);font-size:.62rem;letter-spacing:.05em;text-transform:uppercase;
-    color:var(--ink-faint);border:1px solid var(--line);border-radius:6px;padding:3px 6px;white-space:nowrap}
-  .demo{padding:16px;background:linear-gradient(180deg,var(--inset),var(--panel));flex:1;
-    min-height:290px;display:flex;flex-direction:column;justify-content:center}
+  /* ---- real WelcomeView bits ---- */
+  .welcome{display:flex;flex-direction:column;align-items:center}
+  .greet{font-family:var(--serif);font-size:2rem;line-height:1.1;letter-spacing:-.01em;color:var(--ink);text-align:center}
+  .subtitle{margin:.6rem 0 1.3rem;font-size:.85rem;color:var(--muted);text-align:center}
+  .maxw{width:100%;max-width:520px}
 
-  /* faux app context label */
-  .ctxlbl{font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;
-    color:var(--ink-faint);margin-bottom:9px;display:flex;align-items:center;gap:7px}
+  /* ---- real ComposerBox ---- */
+  .composer{position:relative;display:flex;flex-direction:column;gap:12px;border-radius:24px;
+    border:1px solid var(--line);background:var(--composer);
+    box-shadow:0 2px 8px rgba(0,0,0,.04);padding:16px 14px 12px}
+  .composer .ta{min-height:24px;font-size:.9rem;color:var(--ink)}
+  .composer .ta.ph{color:var(--ph)}
+  .crow{display:flex;align-items:center;justify-content:space-between}
+  .attach{width:32px;height:32px;display:grid;place-items:center;color:#7a7a88;border:0;background:transparent;cursor:pointer;border-radius:8px}
+  .attach:hover{color:var(--ink)}
+  .send{width:36px;height:36px;border-radius:999px;display:grid;place-items:center;border:0;cursor:pointer;transition:background .12s}
+  .send.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+  .send.on:hover{background:#f5f5f5}
+  .send.off{background:var(--send-inert);color:var(--ph)}
+  .sendwrap{display:flex;align-items:center;gap:8px}
 
-  /* ---- shared flow primitives ---- */
+  /* pills row */
+  .pills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:16px}
+  .pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:8px 15px;font-size:12.5px;
+    border:1px solid var(--line2);background:#fff;color:#4a4a5a;cursor:pointer;transition:border-color .12s,background .12s}
+  .pill:hover{border-color:var(--line-hover);background:rgba(0,0,0,.02)}
+  .pill.guide{border-color:var(--indigo-200);background:var(--indigo-50);color:var(--indigo-700);font-weight:500}
+  .pill.guide:hover{border-color:#a5b4fc;background:var(--indigo-100)}
+  .pill .ico{width:14px;height:14px;color:#64748b}
+  .pill.guide .ico{color:var(--indigo-600)}
+
+  /* ---- ReviewTypeList multiple-choice (the app's real "pick one" idiom) ---- */
   .qhead{display:flex;align-items:center;gap:8px;margin-bottom:9px}
-  .qcount{font-family:var(--mono);font-size:.68rem;color:var(--ink-faint)}
-  .tag{font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;
-    border-radius:5px;font-weight:600}
-  .tag.fixed{background:var(--accent-soft);color:var(--accent)}
-  .tag.ai{background:var(--ai-soft);color:var(--ai);display:inline-flex;gap:4px;align-items:center}
-  .qtext{font-size:1.03rem;font-weight:560;letter-spacing:-.01em;line-height:1.3;text-wrap:balance;color:var(--ink)}
-  .opts{display:flex;flex-direction:column;gap:7px;margin-top:12px}
-  .opt{appearance:none;text-align:left;font:inherit;font-size:.9rem;color:var(--ink);cursor:pointer;
-    background:var(--panel);border:1px solid var(--line-2);border-radius:10px;padding:10px 12px;
-    display:flex;align-items:center;gap:10px;transition:border-color .12s,background .12s,transform .06s}
-  .opt:hover{border-color:var(--accent);background:var(--accent-soft)}
-  .opt:active{transform:translateY(1px)}
-  .opt .kb{font-family:var(--mono);font-size:.66rem;color:var(--ink-faint);border:1px solid var(--line-2);
-    border-radius:5px;padding:1px 5px;margin-left:auto}
-  .opt:hover .kb{color:var(--accent);border-color:var(--accent)}
-  .ai .opt:hover,.opts.aiopts .opt:hover{border-color:var(--ai);background:var(--ai-soft)}
-  .opts.aiopts .opt:hover .kb{color:var(--ai);border-color:var(--ai)}
+  .qcount{font-size:12px;color:var(--muted)}
+  .qtag{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:5px;padding:2px 6px}
+  .qtag.fixed{background:rgba(0,0,0,.05);color:#6a6a7a}
+  .qtag.gen{background:var(--indigo-50);color:var(--indigo-600);display:inline-flex;gap:4px;align-items:center}
+  .qtext{font-size:15px;font-weight:560;line-height:1.3;color:var(--ink);margin-bottom:11px}
+  .choices{display:flex;flex-direction:column;gap:8px}
+  .choice{display:flex;align-items:center;gap:8px;width:100%;text-align:left;cursor:pointer;
+    border-radius:8px;border:1px solid rgba(0,0,0,.05);background:#fff;color:var(--slate700);
+    padding:10px 12px;font-size:13.5px;transition:border-color .12s,background .12s,color .12s;font-family:inherit}
+  .choice:hover{border-color:var(--line-hover)}
+  .choice.sel{border-color:var(--sel-border);background:var(--sel-bg);color:var(--ink);font-weight:500}
+  .choice .chk{margin-left:auto;color:var(--ink);opacity:0;transition:opacity .12s}
+  .choice.sel .chk{opacity:1}
+  .choice.typ{gap:8px}
+  .choice.typ .pen{color:var(--faint)}
+  .choice.typ input{flex:1;border:0;background:transparent;outline:none;font:inherit;font-size:13.5px;color:var(--ink);min-width:0}
+  .choice.typ input::placeholder{color:var(--ph)}
+  .choice.typ.sel .pen{color:var(--ink)}
+  .mc-hint{font-size:11px;color:var(--faint);margin-top:8px;font-family:var(--mono)}
 
-  /* other field */
-  .other{position:relative}
-  .other .olabel{color:var(--ink-soft)}
-  .other .olabel .plus{margin-left:auto;font-family:var(--mono);color:var(--ink-faint);font-size:.9rem}
-  .oform{display:flex;gap:6px;align-items:center;background:var(--panel);border:1px solid var(--accent);
-    border-radius:10px;padding:5px 5px 5px 12px;box-shadow:0 0 0 3px var(--accent-soft)}
-  .oform input{flex:1;border:0;background:transparent;font:inherit;font-size:.9rem;color:var(--ink);outline:none}
-  .oform input::placeholder{color:var(--ink-faint)}
-  .ogo{appearance:none;border:0;cursor:pointer;background:var(--accent);color:var(--accent-ink);
-    width:30px;height:30px;border-radius:7px;font-size:.9rem;display:grid;place-items:center;flex:none}
-  .ogo:hover{background:var(--accent-2)}
-  .ohint{font-family:var(--mono);font-size:.63rem;color:var(--ink-faint);margin-top:5px;padding-left:2px}
-
-  /* dots */
-  .dots{display:flex;gap:6px;align-items:center;margin-top:14px}
-  .dot{width:7px;height:7px;border-radius:50%;background:var(--line-2);transition:background .2s,transform .2s}
-  .dot.done{background:var(--accent)}
-  .dot.cur{background:var(--accent);transform:scale(1.5)}
-  .dot.ai{background:var(--line-2)}
-  .dot.ai.done{background:var(--ai)}
-  .dot.ai.cur{background:var(--ai)}
-  .dsplit{width:1px;height:12px;background:var(--line-2);margin:0 3px}
-
-  /* buttons / composed */
-  .btn{appearance:none;font:inherit;font-size:.85rem;font-weight:560;cursor:pointer;border-radius:9px;
-    padding:9px 14px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink)}
-  .btn:hover{border-color:var(--ink-faint)}
-  .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-  .btn.primary:hover{background:var(--accent-2)}
-  .btn.ghost{background:transparent;border-color:transparent;color:var(--ink-soft);padding:9px 8px}
-  .btn.ghost:hover{color:var(--ink)}
-  .composed{background:var(--inset);border:1px dashed var(--line-2);border-radius:12px;padding:14px}
-  .composed .clbl{font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;
-    color:var(--ok);display:flex;align-items:center;gap:6px;margin-bottom:8px}
-  .composed p{margin:0;font-size:.92rem;line-height:1.5;color:var(--ink)}
-  .composed .row{display:flex;gap:8px;margin-top:13px}
-
-  /* loading shimmer */
-  .loading{display:flex;align-items:center;gap:10px;color:var(--ai);font-size:.9rem;padding:6px 0}
-  .spark{width:16px;height:16px;color:var(--ai);animation:spin 1.4s linear infinite}
-  .shimmer{height:38px;border-radius:10px;margin-top:7px;
-    background:linear-gradient(100deg,var(--panel-2) 30%,var(--ai-soft) 50%,var(--panel-2) 70%);
-    background-size:220% 100%;animation:sweep 1.25s ease-in-out infinite}
-  .shimmer.s2{width:88%}.shimmer.s3{width:72%}
+  /* "generating" shimmer */
+  .gen-row{display:flex;align-items:center;gap:9px;color:var(--indigo-600);font-size:13.5px;padding:4px 0}
+  .spark{width:15px;height:15px;animation:pulse 1.3s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+  .shim{height:40px;border-radius:8px;margin-top:8px;background:linear-gradient(100deg,rgba(0,0,0,.04) 30%,var(--indigo-50) 50%,rgba(0,0,0,.04) 70%);background-size:220% 100%;animation:sweep 1.25s ease-in-out infinite}
+  .shim.b{width:82%}
   @keyframes sweep{to{background-position:-220% 0}}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  @media (prefers-reduced-motion:reduce){.shimmer,.spark{animation:none}}
+  @media (prefers-reduced-motion:reduce){.shim,.spark{animation:none}}
 
-  .back{appearance:none;border:0;background:transparent;color:var(--ink-faint);cursor:pointer;font:inherit;
-    font-size:.8rem;display:inline-flex;gap:5px;align-items:center;padding:2px 4px}
-  .back:hover{color:var(--ink)}
+  /* composed prompt (final) */
+  .composed p{margin:0;font-size:13.5px;line-height:1.5;color:var(--ink);white-space:pre-wrap}
+  .composed .lbl{font-size:11px;font-weight:600;color:var(--teal);text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px;display:flex;gap:6px;align-items:center}
 
-  /* ==== mode-specific ==== */
-  /* takeover */
-  .m-takeover .box{background:var(--panel);border:1px solid var(--line-2);border-radius:12px;padding:14px;
-    box-shadow:var(--shadow)}
-  .m-takeover .toprow{display:flex;align-items:center;margin-bottom:6px}
-  .m-takeover .guided-pill{margin-left:auto;font-family:var(--mono);font-size:.62rem;color:var(--accent);
-    background:var(--accent-soft);border-radius:999px;padding:3px 8px}
+  /* small caption inside a screen */
+  .cap{font-size:11px;color:var(--faint);text-align:center;margin-top:12px;font-family:var(--mono)}
+  .back{border:0;background:transparent;color:var(--faint);cursor:pointer;font:inherit;font-size:12px;display:inline-flex;gap:4px;align-items:center;padding:0}
+  .back:hover{color:var(--muted2)}
 
-  /* persistent textarea */
-  .m-persist .ta{background:var(--panel);border:1px solid var(--line-2);border-radius:12px;padding:12px;
-    min-height:74px;font-size:.9rem;color:var(--ink);box-shadow:var(--shadow);white-space:pre-wrap}
-  .m-persist .ta .ph{color:var(--ink-faint)}
-  .m-persist .ta b{color:var(--accent);font-weight:600}
-  .m-persist .qstrip{margin-top:12px;background:var(--inset);border:1px solid var(--line);border-radius:11px;padding:12px}
+  /* ---- fork/resume: real composer + mini Details tree ---- */
+  .runview{display:flex;flex-direction:column;gap:14px}
+  .tree{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px}
+  .tree-h{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);padding:6px 8px 8px}
+  .trow{display:flex;align-items:center;gap:10px;padding:8px 8px;border-radius:8px;cursor:pointer;transition:background .1s;position:relative}
+  .trow:hover{background:rgba(0,0,0,.025)}
+  .trow .dot{width:9px;height:9px;border-radius:50%;flex:none}
+  .trow .tname{font-size:13px;color:#374151;font-family:var(--mono)}
+  .trow.sel .tname{font-weight:600;color:#374151}
+  .trow .tstate{margin-left:auto;font-size:10px;font-family:var(--mono);padding:2px 7px;border-radius:999px}
+  .st-done{background:rgba(13,148,136,.12);color:var(--teal)}
+  .st-run{background:rgba(59,130,246,.12);color:#3b82f6}
+  .st-pend{background:rgba(0,0,0,.05);color:var(--faint)}
+  /* selected row = the real accent pill (hexA(hex,0.1) + glow), inline like styles.ts */
+  .trow.sel{margin-left:-2px}
+  .send-label{font-size:11px;color:var(--muted);font-family:var(--mono)}
+  .qmark{width:18px;height:18px;border-radius:50%;border:1px solid var(--line2);color:var(--muted);font-size:11px;
+    display:grid;place-items:center;cursor:help;font-weight:600;flex:none;position:relative}
+  .qmark:hover{border-color:var(--indigo-500);color:var(--indigo-600)}
+  .helper{display:flex;align-items:center;gap:8px;padding:0 2px}
+  .tip{border-radius:12px;border:1px solid var(--line2);background:#fff;padding:12px;box-shadow:0 12px 34px -14px rgba(0,0,0,.4);font-size:12.5px;line-height:1.5;color:#374151}
+  .tip.fork{border-top:2px solid var(--teal)}
+  .tip.steer{border-top:2px solid #3b82f6}
+  .tip .th{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;display:flex;gap:6px;align-items:center}
+  .tip.fork .th{color:var(--teal)} .tip.steer .th{color:#3b82f6}
+  .tip .mod{font-family:var(--mono);background:rgba(0,0,0,.05);border-radius:5px;padding:1px 5px}
+  .disablednote{font-size:12px;color:var(--faint);text-align:center;padding:6px}
 
-  /* chat */
-  .m-chat .thread{display:flex;flex-direction:column;gap:9px;max-height:250px;overflow-y:auto;padding-right:4px}
-  .bubble{max-width:86%;padding:9px 12px;border-radius:13px;font-size:.88rem;line-height:1.4}
-  .bubble.a{align-self:flex-start;background:var(--panel-2);border-bottom-left-radius:4px}
-  .bubble.u{align-self:flex-end;background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:4px}
-  .bubble.ai{background:var(--ai-soft);border:1px solid var(--ai-line)}
-  .m-chat .qopts{align-self:flex-start;width:100%}
-
-  /* accordion */
-  .m-accordion .rows{display:flex;flex-direction:column;gap:7px}
-  .arow{border:1px solid var(--line);border-radius:11px;background:var(--panel);overflow:hidden}
-  .arow.cur{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
-  .arow.cur.aicur{border-color:var(--ai);box-shadow:0 0 0 3px var(--ai-soft)}
-  .arow .ahead{display:flex;gap:9px;align-items:center;padding:10px 12px;cursor:default}
-  .arow.answered .ahead{cursor:pointer}
-  .arow .anum{font-family:var(--mono);font-size:.7rem;color:var(--ink-faint)}
-  .arow .aq{font-size:.86rem;font-weight:520}
-  .arow .aans{margin-left:auto;font-size:.8rem;color:var(--ok);font-weight:560;display:flex;gap:6px;align-items:center;max-width:52%;justify-content:flex-end;text-align:right}
-  .arow .abody{padding:0 12px 12px}
-  .arow.locked{opacity:.55}
-  .arow.locked .aq{color:var(--ink-faint)}
-  .lockicon{margin-left:auto;color:var(--ink-faint);font-size:.75rem;font-family:var(--mono)}
-
-  /* sheet / tray */
-  .m-sheet .fauxinput{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line-2);
-    border-radius:12px;padding:12px 12px;box-shadow:var(--shadow)}
-  .m-sheet .fph{color:var(--ink-faint);font-size:.9rem;flex:1}
-  .m-sheet .gbtn{font-family:var(--mono);font-size:.68rem;color:var(--ai);background:var(--ai-soft);
-    border:1px solid var(--ai-line);border-radius:999px;padding:5px 10px;cursor:pointer;display:inline-flex;gap:5px;align-items:center}
-  .m-sheet .tray{margin-top:8px;background:var(--panel);border:1px solid var(--line-2);border-top:2px solid var(--accent);
-    border-radius:12px;padding:14px;box-shadow:var(--shadow-lg);animation:rise .22s ease}
-  .m-sheet .tray.aitray{border-top-color:var(--ai)}
-  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-  @media (prefers-reduced-motion:reduce){.m-sheet .tray{animation:none}}
-
-  /* popover */
-  .m-popover .anchor{position:relative;display:flex;align-items:center;gap:10px;background:var(--panel);
-    border:1px solid var(--line-2);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
-  .m-popover .gm{margin-left:auto;font-size:.78rem;color:var(--accent);background:var(--accent-soft);
-    border:1px solid var(--accent);border-radius:8px;padding:6px 10px;cursor:pointer;font-weight:560}
-  .pop{margin-top:8px;position:relative;background:var(--panel);border:1px solid var(--line-2);border-radius:12px;
-    padding:13px;box-shadow:var(--shadow-lg)}
-  .pop::before{content:"";position:absolute;top:-7px;right:26px;width:12px;height:12px;background:var(--panel);
-    border-left:1px solid var(--line-2);border-top:1px solid var(--line-2);transform:rotate(45deg)}
-
-  /* focus */
-  .m-focus .stage{background:radial-gradient(120% 120% at 50% 0,var(--panel-2),var(--panel));
-    border:1px solid var(--line-2);border-radius:14px;padding:20px 18px;text-align:center;box-shadow:var(--shadow)}
-  .m-focus .bignum{font-family:var(--mono);font-size:.72rem;color:var(--ink-faint);letter-spacing:.1em}
-  .m-focus .bigq{font-size:1.16rem;font-weight:600;letter-spacing:-.015em;margin:8px 0 15px;text-wrap:balance}
-  .m-focus .fopts{display:flex;flex-direction:column;gap:8px;text-align:left}
-  .m-focus .khint{font-family:var(--mono);font-size:.64rem;color:var(--ink-faint);margin-top:12px}
-
-  /* side */
-  .m-side .split{display:grid;grid-template-columns:1fr 1.2fr;gap:12px}
-  @media (max-width:520px){.m-side .split{grid-template-columns:1fr}}
-  .m-side .leftbox{background:var(--panel);border:1px solid var(--line-2);border-radius:12px;padding:12px;
-    font-size:.85rem;color:var(--ink-soft);box-shadow:var(--shadow);min-height:120px}
-  .m-side .leftbox b{color:var(--accent)}
-  .m-side .panel2{background:var(--panel);border:1px solid var(--line-2);border-left:2px solid var(--accent);
-    border-radius:12px;padding:13px;box-shadow:var(--shadow);animation:slidein .25s ease}
-  @keyframes slidein{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
-  @media (prefers-reduced-motion:reduce){.m-side .panel2,.m-persist .qstrip{animation:none}}
-
-  /* deck */
-  .m-deck .pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:11px}
-  .spill{font-size:.76rem;background:var(--ok-soft);color:var(--ok);border:1px solid transparent;border-radius:999px;
-    padding:4px 9px;cursor:pointer;display:inline-flex;gap:6px;align-items:center;font-weight:540}
-  .spill:hover{border-color:var(--ok)}
-  .m-deck .deckwrap{position:relative}
-  .m-deck .dcard{background:var(--panel);border:1px solid var(--line-2);border-radius:13px;padding:15px;
-    box-shadow:var(--shadow)}
-  .m-deck .stackpeek{position:absolute;left:8px;right:8px;top:9px;height:40px;background:var(--panel);
-    border:1px solid var(--line);border-radius:13px;z-index:-1;opacity:.7}
-  .m-deck .stackpeek.two{left:16px;right:16px;top:18px;opacity:.4}
-
-  /* sentence */
-  .m-sentence .sent{font-size:1.02rem;line-height:1.9;color:var(--ink-soft)}
-  .slot{display:inline;border-bottom:2px dashed var(--line-2);padding:1px 4px;color:var(--ink-faint);
-    font-size:.9rem;white-space:nowrap}
-  .slot.filled{border-bottom-style:solid;border-color:var(--accent);color:var(--ink);background:var(--accent-soft);
-    border-radius:6px 6px 0 0;cursor:pointer;font-weight:540}
-  .slot.filled.aifill{border-color:var(--ai);background:var(--ai-soft)}
-  .slot.active{border-color:var(--accent);color:var(--accent);background:var(--accent-soft);border-radius:6px}
-  .slot.active.aiactive{border-color:var(--ai);color:var(--ai);background:var(--ai-soft)}
-  .m-sentence .picker{margin-top:14px;background:var(--inset);border:1px solid var(--line);border-radius:11px;padding:12px}
-
-  /* ==== tooltip / existing-run section ==== */
-  .tt-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:20px;margin-top:22px}
-  @media (max-width:860px){.tt-grid{grid-template-columns:1fr}}
-  .ctl{display:flex;flex-direction:column;gap:16px}
-  .segrow{display:flex;gap:8px;flex-wrap:wrap}
-  .seg{display:inline-flex;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:3px}
-  .seg button{appearance:none;border:0;background:transparent;font:inherit;font-size:.84rem;color:var(--ink-soft);
-    padding:7px 13px;border-radius:7px;cursor:pointer;font-weight:540}
-  .seg button.on{background:var(--panel);color:var(--ink);box-shadow:var(--shadow)}
-  .seg.forkseg button.on{color:var(--warn)}
-  .seg.resseg button.on{color:var(--ok)}
-  .modrow{display:flex;flex-direction:column;gap:7px}
-  .mod{display:flex;align-items:center;gap:11px;padding:10px 12px;border:1px solid var(--line);border-radius:11px;
-    background:var(--panel);cursor:pointer;transition:border-color .12s}
-  .mod:hover{border-color:var(--line-2)}
-  .mod.sel{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
-  .mod .mname{font-family:var(--mono);font-size:.82rem;color:var(--ink)}
-  .mod .mstate{margin-left:auto;font-family:var(--mono);font-size:.66rem;padding:3px 8px;border-radius:999px;font-weight:600}
-  .st-done{background:var(--ok-soft);color:var(--ok)}
-  .st-run{background:var(--accent-soft);color:var(--accent)}
-  .st-pend{background:var(--panel-2);color:var(--ink-faint)}
-  .st-err{background:var(--warn-soft);color:var(--warn)}
-  .mseq{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-family:var(--mono);
-    font-size:.66rem;background:var(--panel-2);color:var(--ink-soft);flex:none}
-
-  .parent-toggle{display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--ink-soft)}
-  .switch{width:40px;height:23px;border-radius:999px;background:var(--line-2);position:relative;cursor:pointer;
-    transition:background .18s;flex:none}
-  .switch.on{background:var(--accent)}
-  .switch::after{content:"";position:absolute;top:2px;left:2px;width:19px;height:19px;border-radius:50%;
-    background:#fff;transition:left .18s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
-  .switch.on::after{left:19px}
-
-  .tt-stage{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px;
-    display:flex;flex-direction:column;align-items:flex-start;gap:14px;min-height:220px;box-shadow:var(--shadow)}
-  .runrow{display:flex;align-items:center;gap:9px;width:100%}
-  .runrow .rtitle{font-weight:600}
-  .runrow .rmode{font-family:var(--mono);font-size:.68rem;padding:3px 8px;border-radius:999px}
-  .rmode.fork{background:var(--warn-soft);color:var(--warn)}
-  .rmode.resume{background:var(--ok-soft);color:var(--ok)}
-  .qmark{width:22px;height:22px;border-radius:50%;border:1px solid var(--line-2);color:var(--ink-soft);
-    font-size:.8rem;display:grid;place-items:center;cursor:help;font-weight:600;position:relative}
-  .qmark:hover{border-color:var(--accent);color:var(--accent)}
-  .tooltip{width:100%;max-width:430px;background:var(--panel);border:1px solid var(--line-2);border-radius:12px;
-    padding:14px;box-shadow:var(--shadow-lg);position:relative}
-  .tooltip.fork{border-top:2px solid var(--warn)}
-  .tooltip.resume{border-top:2px solid var(--ok)}
-  .tooltip .th{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;
-    display:flex;align-items:center;gap:7px;margin-bottom:8px}
-  .tooltip.fork .th{color:var(--warn)}.tooltip.resume .th{color:var(--ok)}
-  .tooltip p{margin:0;font-size:.88rem;line-height:1.5;color:var(--ink)}
-  .tooltip .modref{font-family:var(--mono);background:var(--panel-2);border-radius:5px;padding:1px 5px;font-size:.82em}
-  .tooltip .hintline{margin-top:9px;font-size:.78rem;color:var(--ink-soft);display:flex;gap:7px;align-items:flex-start}
-  .tt-caption{font-family:var(--mono);font-size:.66rem;color:var(--ink-faint);margin-top:3px}
-
-  footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);color:var(--ink-faint);
-    font-size:.82rem;line-height:1.6}
-  .kbd{font-family:var(--mono);font-size:.72rem;border:1px solid var(--line-2);border-bottom-width:2px;
-    border-radius:5px;padding:1px 5px;color:var(--ink-soft)}
-  .note{background:var(--warn-soft);border:1px solid transparent;border-radius:8px;padding:2px 8px;
-    font-size:.74rem;color:var(--warn);font-family:var(--mono);display:inline-flex;gap:6px;align-items:center}
+  .section-tab{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;opacity:.6;margin:34px 2px 4px}
+  :root[data-theme="light"] .section-tab{color:#2a2a33} @media (prefers-color-scheme:light){.section-tab{color:#2a2a33}}
+  .svg-ico{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 </style>
 
 <div class="wrap">
-  <header>
-    <div class="eyebrow">AI Inventor · design exploration</div>
-    <h1>Guided run setup — <span class="g">ten ways the questions can live in the box</span></h1>
-    <p class="lede">A run normally starts by typing a prompt — that still works exactly as today. This adds an
-      <b>opt-in</b> path beside it: press <b>Guide me</b> and, instead of writing the whole thing, you answer a few
-      quick questions. Three are fixed; once they're answered, three more are generated from your answers. When
-      you're done, the six answers are stitched into a single prompt and sent to start the run — identical to one
-      you'd type by hand. Below are ten live treatments for how that flow can live in the input box — click through
-      any of them.</p>
-
-    <div class="meta">
-      <div class="card pad">
-        <div class="mlabel">The interaction, in every variant</div>
-        <div class="contract">
-          <span class="chip k"><span class="dotmark"></span><b>3</b> fixed questions</span>
-          <span class="chip kai">✦ then <b>3</b> generated · Sonnet&nbsp;5</span>
-          <span class="chip"><b>1 of 4</b> answers each</span>
-          <span class="chip">preset → <b>one click</b>, advances</span>
-          <span class="chip">“Other” → hover · type · <b>↵</b></span>
-          <span class="chip k"><span class="dotmark"></span>opt-in · plain prompt unaffected</span>
-          <span class="chip">answers → <b>one prompt</b> → normal run start</span>
-        </div>
-        <div style="margin-top:13px"><span class="note">◆ questions are mock placeholders for now</span></div>
-      </div>
-
-      <div class="card pad">
-        <div class="mlabel">The generation call — provider latency
-          <span id="provstate" style="margin-left:auto;color:var(--ink-faint);text-transform:none;letter-spacing:0">3 calls each · live</span>
-        </div>
-        <table class="prov">
-          <thead><tr><th>Provider (OpenRouter)</th><th style="text-align:right">Median · 3 calls</th><th></th></tr></thead>
-          <tbody id="provbody">
-            <tr><td>Azure</td><td class="lat" data-p="azure">6.85 s</td><td><span class="pill win">fastest</span></td></tr>
-            <tr><td>Anthropic</td><td class="lat" data-p="anthropic">7.14 s</td><td><span class="pill na">≈ tie</span></td></tr>
-            <tr><td>Amazon Bedrock</td><td class="lat" data-p="amazon-bedrock">—</td><td><span class="pill na">acct off</span></td></tr>
-            <tr><td>Google Vertex</td><td class="lat" data-p="google-vertex">—</td><td><span class="pill na">no route</span></td></tr>
-          </tbody>
-        </table>
-        <div class="prov-note" id="provnote">Model <code>anthropic/claude-sonnet-5</code>, structured output, pinned per provider
-          (<code>allow_fallbacks:false</code>), 3 calls each. Azure &amp; Anthropic are effectively tied (~7&nbsp;s median;
-          Azure has the worse tail at 9.5&nbsp;s max). Bedrock &amp; Vertex aren't reachable on this account.
-          <b>~7&nbsp;s to full JSON is a long wait right after Q3</b> — stream the questions in or generate them speculatively
-          while the user is still answering, rather than blocking.</div>
-      </div>
-    </div>
-  </header>
-
-  <div class="sec"><h2>Input-box treatments</h2><p>Ten patterns · same underlying flow · all interactive.</p></div>
-  <div class="rule"></div>
-  <div class="gallery" id="gallery"></div>
-
-  <div class="sec"><h2>Existing runs — the “?” explainer</h2>
-    <p>Not a new run: a small “?” on the launcher whose hover text changes for <b>resume</b> vs <b>fork</b>,
-      and follows the selected module as its state changes.</p></div>
-  <div class="rule"></div>
-  <div class="tt-grid">
-    <div class="card pad ctl" id="ttctl"></div>
-    <div class="tt-stage" id="ttstage"></div>
+  <div class="lead">
+    <div class="eyebrow">AI Inventor · variants in your real UI</div>
+    <h1>Guided setup &amp; fork/resume — small changes to your existing composer</h1>
+    <p>Everything below is your real UI (the actual ComposerBox, ReviewTypeList option idiom, Details side-tree),
+      with just the feature change added. Fixed answers use your canonical “pick one” multiple-choice; there's no
+      separate “Other” — a “type your answer” row is one of the choices. Scroll through; each is live.</p>
   </div>
 
-  <footer>
-    Mock content throughout — the copy is illustrative. Fixed questions are placeholders; the three “generated”
-    questions are stand-ins for the Sonnet&nbsp;5 structured-output call.  ·  Theme follows your viewer (light/dark).
-  </footer>
+  <div class="section-tab">A · Guided questions — how they appear in the composer</div>
+  <div id="guided"></div>
+
+  <div class="section-tab">B · Fork vs resume — the “?” on the real run composer</div>
+  <div id="forkresume"></div>
 </div>
 
 <script>
 (function(){
   "use strict";
-  const h=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;};
-  const SPARK='<svg class="spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M18 6l-2.5 2.5M8.5 15.5L6 18"/></svg>';
-  const AITAG='<span class="tag ai">✦ generated</span>';
+  const h=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;};
+  const CHECK='<svg class="svg-ico" viewBox="0 0 24 24" style="width:15px;height:15px"><path d="M20 6 9 17l-5-5"/></svg>';
+  const SPARK='<svg class="svg-ico spark" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/></svg>';
+  const PEN='<svg class="svg-ico" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
+  const PLUS='<svg class="svg-ico" viewBox="0 0 24 24" style="width:18px;height:18px"><path d="M12 5v14M5 12h14"/></svg>';
+  const UP='<svg class="svg-ico" viewBox="0 0 24 24" style="width:16px;height:16px;stroke-width:2.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+  const SPARKLE_SM='<svg class="svg-ico" viewBox="0 0 24 24" style="width:13px;height:13px"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg>';
 
-  // ---- mock content ----
+  // ---- mock questions (multiple-choice; last row = type your own) ----
   const FIXED=[
     {q:"What should this run explore?",opts:["LLM multi-agent systems","Mechanistic interpretability","Long-context retrieval methods"]},
     {q:"What would make the run a success?",opts:["Beat a strong baseline with a new method","Ship a benchmark others can reuse","Settle an open question cleanly"]},
-    {q:"Any hard constraint to respect?",opts:["Stay within a fixed compute budget","Use only open models & data","Finish within ~a day of wall-clock"]},
+    {q:"Any hard constraint to respect?",opts:["Reproducible on public data","A modest compute budget","A top-venue-quality result"]},
   ];
   const AI=[
     {q:"Which failure mode is most worth probing?",opts:["Coordination breaks under contention","Shared state silently diverges","One faulty agent cascades errors"]},
-    {q:"How should success be measured?",opts:["Task success vs. team size","Tokens spent per solved task","Robustness to an injected bad agent"]},
-    {q:"What baseline should it beat?",opts:["A single strong model","A fixed hierarchical controller","Random / round-robin role assignment"]},
+    {q:"How should success be measured?",opts:["Task success vs. team size","Tokens per solved task","Robustness to an injected bad agent"]},
+    {q:"What baseline should it beat?",opts:["A single strong model","A fixed hierarchical controller","Round-robin role assignment"]},
   ];
   const ALL=FIXED.concat(AI);
   const lc=s=>s?s.charAt(0).toLowerCase()+s.slice(1):"…";
-  const compose=a=>`Explore ${a[0]||"…"}, aiming to ${lc(a[1])}. Respect one constraint: ${a[2]||"…"}. Zero in on ${lc(a[3])}, measured by ${lc(a[4])}, benchmarked against ${lc(a[5])}.`;
+  const compose=a=>`Explore ${a[0]||"…"}, aiming to ${lc(a[1])}. Constraint: ${a[2]||"…"}. Focus on ${lc(a[3])}, measured by ${lc(a[4])}, versus ${lc(a[5])}.`;
 
-  // ---- shared option widget (3 presets + Other: hover→type→enter) ----
-  function optsEl(qIndex,onPick){
-    const qo=ALL[qIndex], isAi=qIndex>=3;
-    const wrap=h("div","opts"+(isAi?" aiopts":""));
-    qo.opts.forEach((opt,i)=>{
-      const b=h("button","opt");b.type="button";
+  // ---- ReviewTypeList-style multiple-choice for one question ----
+  function choicesEl(qi,onPick){
+    const qo=ALL[qi];
+    const box=h("div","choices");
+    let selected=null;
+    qo.opts.forEach(opt=>{
+      const b=h("button","choice");b.type="button";
       b.append(h("span",null,opt));
-      const kb=h("span","kb",String(i+1));b.append(kb);
-      b.onclick=()=>onPick(opt);
-      wrap.append(b);
+      const chk=h("span","chk");chk.innerHTML=CHECK;b.append(chk);
+      b.onclick=()=>{ if(selected)selected.classList.remove("sel"); b.classList.add("sel"); selected=b; setTimeout(()=>onPick(opt),240); };
+      box.append(b);
     });
-    // Other
-    const other=h("button","opt other");other.type="button";
-    const lbl=h("span","olabel","Other…");const plus=h("span","plus","+");lbl.append(plus);
-    other.append(lbl);
-    const form=h("div","oform");form.hidden=true;
-    const inp=document.createElement("input");inp.type="text";inp.placeholder="Type your answer…";
-    const go=h("button","ogo","↵");go.type="button";go.setAttribute("aria-label","Use this answer");
-    form.append(inp,go);
-    const hint=h("div","ohint","hover, type your own, press ↵");hint.hidden=true;
-    const box=h("div",null);box.style.position="relative";box.append(other,form);
-    const commit=()=>{const v=inp.value.trim();if(v)onPick(v);};
-    const open=()=>{if(!form.hidden)return;other.style.display="none";form.hidden=false;hint.hidden=false;};
-    const close=()=>{if(inp.value.trim())return;form.hidden=true;hint.hidden=true;other.style.display="";};
-    other.addEventListener("mouseenter",open);         // "mouseover and then type"
-    other.addEventListener("focus",open);
-    other.onclick=()=>{open();inp.focus();};
-    form.addEventListener("mouseleave",()=>{if(document.activeElement!==inp)close();});
-    inp.addEventListener("blur",()=>setTimeout(close,120));
-    inp.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();commit();}else if(e.key==="Escape"){inp.value="";close();}};
-    go.onclick=commit;
-    wrap.append(box);
-    const container=h("div",null);container.append(wrap,hint);
-    // keyboard 1/2/3 support hook
-    container._pickByKey=k=>{const n=parseInt(k,10);if(n>=1&&n<=3)onPick(qo.opts[n-1]);};
-    container._focusOther=()=>{open();inp.focus();};
-    return container;
+    // "type your answer" is the 4th choice (no two-step Other)
+    const t=h("div","choice typ");
+    const pen=h("span","pen");pen.innerHTML=PEN;t.append(pen);
+    const inp=document.createElement("input");inp.type="text";inp.placeholder="Type your answer…";t.append(inp);
+    const chk=h("span","chk");chk.innerHTML=CHECK;t.append(chk);
+    const commit=()=>{const v=inp.value.trim();if(v){t.classList.add("sel");setTimeout(()=>onPick(v),200);}};
+    inp.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();commit();}};
+    t.onclick=e=>{ if(e.target!==inp) inp.focus(); };
+    inp.oninput=()=>{ if(selected){selected.classList.remove("sel");selected=null;} };
+    box.append(t);
+    return box;
   }
-
-  function qHead(qIndex){
-    const isAi=qIndex>=3;
-    const head=h("div","qhead");
-    head.append(h("span","qcount",`Question ${qIndex+1} of 6`));
-    const tag=h("span","tag "+(isAi?"ai":"fixed"));
-    tag.innerHTML=isAi?"✦ generated":"fixed";
-    head.append(tag);
-    return head;
+  function qHeadEl(qi){
+    const isAi=qi>=3;
+    const hd=h("div","qhead");
+    hd.append(h("span","qcount",`Question ${qi+1} of 6`));
+    const tag=h("span","qtag "+(isAi?"gen":"fixed"));
+    if(isAi){tag.innerHTML=SPARKLE_SM+" generated";}else{tag.textContent="fixed";}
+    hd.append(tag);
+    return hd;
   }
-
-  function dotsEl(idx,aiReady){
-    const d=h("div","dots");
-    for(let i=0;i<6;i++){
-      if(i===3){d.append(h("span","dsplit"));}
-      const isAi=i>=3;
-      const dot=h("span","dot"+(isAi?" ai":""));
-      if(i<idx)dot.classList.add("done");
-      if(i===idx)dot.classList.add("cur");
-      d.append(dot);
-    }
-    return d;
-  }
-
-  function loadingEl(){
-    const w=h("div",null);
-    const l=h("div","loading");l.innerHTML=SPARK+"<span>Generating 3 follow-ups from your answers…</span>";
-    w.append(l,Object.assign(h("div","shimmer"),{}),Object.assign(h("div","shimmer s2")),Object.assign(h("div","shimmer s3")));
+  function genRow(){
+    const w=h("div");
+    const r=h("div","gen-row");r.innerHTML=SPARK+"<span>Generating 3 follow-ups from your answers…</span>";
+    w.append(r,h("div","shim"),h("div","shim b"));
     return w;
   }
-
   function composedEl(state,reset){
     const c=h("div","composed");
-    const lbl=h("div","clbl");lbl.innerHTML="✓ prompt assembled";c.append(lbl);
+    const l=h("div","lbl");l.innerHTML=CHECK+"<span style=\"margin-left:2px\">prompt assembled</span>";c.append(l);
     c.append(h("p",null,compose(state.ans)));
-    const row=h("div","row");
-    const use=h("button","btn primary","Use this prompt");
-    const edit=h("button","btn ghost","Start over");edit.onclick=reset;
-    use.onclick=()=>{use.textContent="Queued ✓";setTimeout(()=>use.textContent="Use this prompt",1200);};
-    row.append(use,edit);c.append(row);
     return c;
   }
 
-  // ---- the engine: one flow, ten layout modes ----
-  function runFlow(root,mode){
-    const state={idx:0,ans:[],aiReady:false,aiLoading:false};
-    const setKeyHost=host=>{host.tabIndex=0;host.onkeydown=e=>{
-      if(state.aiLoading||state.idx>=6)return;
-      if(cur&&cur._pickByKey&&/[1-3]/.test(e.key)){cur._pickByKey(e.key);} };};
-    let cur=null,done=false;
-    const pick=val=>{state.ans[state.idx]=val;goNext();};
-    function goNext(){
-      if(state.idx===2&&!state.aiReady&&!state.aiLoading){
-        state.idx=3;state.aiLoading=true;render();
-        setTimeout(()=>{state.aiLoading=false;state.aiReady=true;render();},1000);
-        return;
-      }
+  // ---- shared guided flow engine; ``chrome`` decides layout ----
+  function guidedFlow(root,chrome){
+    const state={idx:0,ans:[],aiReady:false,loading:false};
+    const pick=v=>{state.ans[state.idx]=v;next();};
+    function next(){
+      if(state.idx===2&&!state.aiReady){state.idx=3;state.loading=true;render();
+        setTimeout(()=>{state.loading=false;state.aiReady=true;render();},1050);return;}
       state.idx++;render();
     }
-    const reset=()=>{state.idx=0;state.ans=[];state.aiReady=false;state.aiLoading=false;render();};
-    const editTo=i=>{if(i<state.idx){state.idx=i;render();}};
-
-    function render(){
-      root.innerHTML="";root.className="demo m-"+mode;
-      done=state.idx>=6;
-      // build the current question widget once (shared)
-      cur=(!done&&!state.aiLoading)?optsEl(state.idx,pick):null;
-
-      if(mode==="takeover") return renderTakeover();
-      if(mode==="persist")  return renderPersist();
-      if(mode==="chat")     return renderChat();
-      if(mode==="accordion")return renderAccordion();
-      if(mode==="sheet")    return renderSheet();
-      if(mode==="popover")  return renderPopover();
-      if(mode==="focus")    return renderFocus();
-      if(mode==="side")     return renderSide();
-      if(mode==="deck")     return renderDeck();
-      if(mode==="sentence") return renderSentence();
-    }
-
-    // 1 — takeover
-    function renderTakeover(){
-      const ctx=h("div","ctxlbl");ctx.innerHTML='<span>▚ new run · guided</span>';root.append(ctx);
-      const box=h("div","box");
-      const top=h("div","toprow");
-      if(state.idx>0&&!done&&!state.aiLoading){const b=h("button","back","‹ back");b.onclick=()=>editTo(state.idx-1);top.append(b);}
-      top.append(Object.assign(h("span","guided-pill","guided"),{}));box.append(top);
-      if(done){box.append(composedEl(state,reset));}
-      else if(state.aiLoading){box.append(loadingEl());}
-      else{box.append(qHead(state.idx));box.append(Object.assign(h("div","qtext",ALL[state.idx].q)));box.append(cur);}
-      box.append(dotsEl(state.idx,state.aiReady));
-      root.append(box);
-    }
-
-    // 2 — persistent textarea, fills live
-    function renderPersist(){
-      const ctx=h("div","ctxlbl");ctx.innerHTML="<span>▚ prompt · builds as you answer</span>";root.append(ctx);
-      const ta=h("div","ta");
-      if(state.ans.length===0&&state.idx===0){ta.innerHTML='<span class="ph">Your prompt will appear here as you answer…</span>';}
-      else{ta.innerHTML="<b>Direction:</b> "+state.ans.map(a=>a||"…").join(" · ");}
-      root.append(ta);
-      if(done){const c=composedEl(state,reset);c.style.marginTop="12px";root.append(c);return;}
-      const strip=h("div","qstrip");
-      if(state.aiLoading){strip.append(loadingEl());}
-      else{strip.append(qHead(state.idx));strip.append(h("div","qtext",ALL[state.idx].q));strip.append(cur);}
-      root.append(strip);root.append(dotsEl(state.idx,state.aiReady));
-    }
-
-    // 3 — conversational
-    function renderChat(){
-      const ctx=h("div","ctxlbl");ctx.innerHTML="<span>▚ new run · quick chat</span>";root.append(ctx);
-      const thread=h("div","thread");
-      for(let i=0;i<Math.min(state.idx,6);i++){
-        const ab=h("div","bubble a"+(i>=3?" ai":""));ab.textContent=ALL[i].q;thread.append(ab);
-        if(state.ans[i]!=null){const ub=h("div","bubble u");ub.textContent=state.ans[i];thread.append(ub);}
-      }
-      if(state.aiLoading){const tb=h("div","bubble a ai");tb.innerHTML=SPARK+" thinking up 3 follow-ups…";thread.append(tb);}
-      else if(!done){
-        const ab=h("div","bubble a"+(state.idx>=3?" ai":""));ab.textContent=ALL[state.idx].q;thread.append(ab);
-        const wrap=h("div","qopts");wrap.append(cur);thread.append(wrap);
-      }else{
-        const ab=h("div","bubble a");ab.textContent="Here's your run prompt:";thread.append(ab);
-        const pb=h("div","bubble u");pb.style.maxWidth="94%";pb.textContent=compose(state.ans);thread.append(pb);
-      }
-      root.append(thread);
-      if(done){const r=h("div","composed");r.style.marginTop="10px";r.style.border="0";r.style.background="transparent";r.style.padding="0";
-        const row=h("div","row");const u=h("button","btn primary","Use this prompt");const e=h("button","btn ghost","Start over");e.onclick=reset;row.append(u,e);r.append(row);root.append(r);}
-      thread.scrollTop=thread.scrollHeight;
-      requestAnimationFrame(()=>{thread.scrollTop=thread.scrollHeight;});
-    }
-
-    // 4 — accordion list
-    function renderAccordion(){
-      const ctx=h("div","ctxlbl");ctx.innerHTML="<span>▚ new run · checklist</span>";root.append(ctx);
-      const rows=h("div","rows");
-      const count=state.aiReady?6:(state.aiLoading?3:6);
-      for(let i=0;i<6;i++){
-        const isAi=i>=3, revealed=!isAi||state.aiReady;
-        const row=h("div","arow");
-        const answered=state.ans[i]!=null&&i<state.idx;
-        const isCur=i===state.idx&&!done&&!state.aiLoading;
-        if(answered)row.classList.add("answered");
-        if(isCur){row.classList.add("cur");if(isAi)row.classList.add("aicur");}
-        if(!revealed)row.classList.add("locked");
-        const head=h("div","ahead");
-        head.append(h("span","anum",(i+1)+"."));
-        head.append(h("span","aq",revealed?ALL[i].q:"Generated after the first three"));
-        if(answered){const a=h("span","aans");a.innerHTML="✓ <span>"+escapeHtml(state.ans[i])+"</span>";head.append(a);head.onclick=()=>editTo(i);}
-        else if(!revealed){const l=h("span","lockicon","✦ locked");head.append(l);}
-        else if(isAi){const t=h("span","tag ai");t.innerHTML="✦";t.style.marginLeft="auto";head.append(t);}
-        row.append(head);
-        if(isCur){const body=h("div","abody");body.append(cur);row.append(body);}
-        rows.append(row);
-      }
-      root.append(rows);
-      if(state.aiLoading){const l=loadingEl();l.style.marginTop="10px";root.append(l);}
-      if(done){const c=composedEl(state,reset);c.style.marginTop="12px";root.append(c);}
-    }
-
-    // 5 — bottom sheet / tray
-    function renderSheet(){
-      const ctx=h("div","ctxlbl");ctx.innerHTML="<span>▚ new run</span>";root.append(ctx);
-      const fi=h("div","fauxinput");
-      fi.append(h("span","fph",done?"Prompt ready ✓":"Describe your run…  or"));
-      const g=h("button","gbtn");g.innerHTML="✦ guide me";fi.append(g);root.append(fi);
-      if(done){const c=composedEl(state,reset);c.style.marginTop="8px";root.append(c);return;}
-      const tray=h("div","tray"+(state.idx>=3?" aitray":""));
-      if(state.aiLoading){tray.append(loadingEl());}
-      else{tray.append(qHead(state.idx));tray.append(h("div","qtext",ALL[state.idx].q));tray.append(cur);tray.append(dotsEl(state.idx,state.aiReady));}
-      root.append(tray);
-    }
-
-    // 6 — popover from a button
-    function renderPopover(){
-      const ctx=h("div","ctxlbl");ctx.innerHTML="<span>▚ new run</span>";root.append(ctx);
-      const anchor=h("div","anchor");
-      anchor.append(h("span","fph",done?"Prompt ready ✓":"What should we build?"));
-      const gm=h("button","gm","Guide me");anchor.append(gm);root.append(anchor);
-      if(done){const c=composedEl(state,reset);c.style.marginTop="8px";root.append(c);return;}
-      const pop=h("div","pop");
-      if(state.aiLoading){pop.append(loadingEl());}
-      else{pop.append(qHead(state.idx));pop.append(h("div","qtext",ALL[state.idx].q));pop.append(cur);pop.append(dotsEl(state.idx,state.aiReady));}
-      root.append(pop);
-    }
-
-    // 7 — focus / one-at-a-time (keyboard)
-    function renderFocus(){
-      const ctx=h("div","ctxlbl");ctx.innerHTML="<span>▚ new run · focus mode</span>";root.append(ctx);
-      const stage=h("div","stage");
-      if(done){stage.append(composedEl(state,reset));root.append(stage);return;}
-      if(state.aiLoading){stage.append(loadingEl());root.append(stage);return;}
-      const isAi=state.idx>=3;
-      const bn=h("div","bignum");bn.innerHTML=(state.idx+1)+" / 6 &nbsp;·&nbsp; "+(isAi?"✦ generated":"fixed");stage.append(bn);
-      stage.append(h("div","bigq",ALL[state.idx].q));
-      const fo=h("div","fopts");fo.append(cur.firstChild);fo.append(cur.lastChild);stage.append(fo);
-      stage.append(Object.assign(h("div","khint"),{innerHTML:"press <span class='kbd'>1</span> <span class='kbd'>2</span> <span class='kbd'>3</span> — or type your own"}));
-      root.append(stage);setKeyHost(stage);stage.focus({preventScroll:true});
-    }
-
-    // 8 — side panel
-    function renderSide(){
-      const ctx=h("div","ctxlbl");ctx.innerHTML="<span>▚ new run · guided panel</span>";root.append(ctx);
-      const split=h("div","split");
-      const left=h("div","leftbox");
-      left.innerHTML=state.ans.length?("<b>Draft prompt</b><br>"+escapeHtml(state.ans.filter(Boolean).join(" · "))):
-        "<b>Draft prompt</b><br><span style='color:var(--ink-faint)'>fills in from the panel →</span>";
-      split.append(left);
-      const panel=h("div","panel2");
-      if(done){panel.append(composedEl(state,reset));}
-      else if(state.aiLoading){panel.append(loadingEl());}
-      else{panel.append(qHead(state.idx));panel.append(h("div","qtext",ALL[state.idx].q));panel.append(cur);panel.append(dotsEl(state.idx,state.aiReady));}
-      split.append(panel);root.append(split);
-    }
-
-    // 9 — collapsing deck
-    function renderDeck(){
-      const ctx=h("div","ctxlbl");ctx.innerHTML="<span>▚ new run · answer deck</span>";root.append(ctx);
-      if(state.idx>0){const pills=h("div","pills");
-        for(let i=0;i<state.idx;i++){if(state.ans[i]==null)continue;const p=h("span","spill");p.innerHTML="✓ "+escapeHtml(state.ans[i]);p.onclick=()=>editTo(i);pills.append(p);}
-        root.append(pills);}
-      if(done){root.append(composedEl(state,reset));return;}
-      const wrap=h("div","deckwrap");
-      const remaining=6-state.idx;
-      if(remaining>1)wrap.append(h("div","stackpeek"));
-      if(remaining>2)wrap.append(h("div","stackpeek two"));
-      const card=h("div","dcard");
-      if(state.aiLoading){card.append(loadingEl());}
-      else{card.append(qHead(state.idx));card.append(h("div","qtext",ALL[state.idx].q));card.append(cur);}
-      wrap.append(card);root.append(wrap);root.append(dotsEl(state.idx,state.aiReady));
-    }
-
-    // 10 — sentence / madlib
-    function renderSentence(){
-      const ctx=h("div","ctxlbl");ctx.innerHTML="<span>▚ new run · fill the blanks</span>";root.append(ctx);
-      const labels=["explore","aiming to","within","focus on","measured by","versus"];
-      const sent=h("div","sent");sent.append(document.createTextNode("Explore "));
-      const frag=[];
-      for(let i=0;i<6;i++){
-        const isAi=i>=3;
-        let cls="slot";
-        if(state.ans[i]!=null)cls+=" filled"+(isAi?" aifill":"");
-        if(i===state.idx&&!done&&!state.aiLoading)cls+=" active"+(isAi?" aiactive":"");
-        const slot=h("span",cls,state.ans[i]!=null?state.ans[i]:("▢ "+labels[i]));
-        if(state.ans[i]!=null)slot.onclick=()=>editTo(i);
-        frag.push(slot);
-      }
-      // weave: Explore [0], aiming to [1], within [2] — focus on [3], measured by [4], versus [5].
-      sent.append(frag[0],t(", aiming to "),frag[1],t(", within "),frag[2],t(" — focus on "),
-                  frag[3],t(", measured by "),frag[4],t(", versus "),frag[5],t("."));
-      root.append(sent);
-      if(done){const c=composedEl(state,reset);c.style.marginTop="14px";root.append(c);return;}
-      const picker=h("div","picker");
-      if(state.aiLoading){picker.append(loadingEl());}
-      else{picker.append(qHead(state.idx));picker.append(h("div","qtext",ALL[state.idx].q));picker.append(cur);}
-      root.append(picker);
-    }
-    function t(s){return document.createTextNode(s);}
-
+    const reset=()=>{state.idx=0;state.ans=[];state.aiReady=false;state.loading=false;render();};
+    function render(){ root.innerHTML=""; chrome(root,state,{pick,reset,qHeadEl,choicesEl,genRow,composedEl}); }
     render();
   }
-  function escapeHtml(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 
-  // ---- variant registry ----
-  const VARIANTS=[
-    ["takeover","Inline takeover","The box becomes the question — one at a time, with a progress trail.","full-box"],
-    ["persist","Prompt builds live","Textarea stays put and fills in as you answer beneath it.","hybrid"],
-    ["chat","Quick chat","Questions and answers as a tiny conversation that writes the prompt.","conversational"],
-    ["accordion","Setup checklist","A vertical list; answered items collapse, generated ones unlock.","list"],
-    ["sheet","Guide-me tray","A normal box with a “guide me” button that opens a tray below.","opt-in"],
-    ["popover","Anchored popover","A compact popover floats over the box, minimal footprint.","compact"],
-    ["focus","Focus mode","One big question per screen, keyboard-first (1·2·3 or type).","immersive"],
-    ["side","Side panel","Box on the left drafts as a panel on the right asks.","two-pane"],
-    ["deck","Answer deck","A stack of cards; each answered one collapses to a pill.","stacked"],
-    ["sentence","Fill the blanks","Answers drop into a single sentence you can read back.","madlib"],
+  // ===== Guided variants (all reuse the real composer) =====
+  function composerShell(inner,{withPills=false,activeSend=false,sendLabel=null}={}){
+    const c=h("div","composer");
+    c.append(inner);
+    const row=h("div","crow");
+    const att=h("button","attach");att.innerHTML=PLUS;row.append(att);
+    const sw=h("div","sendwrap");
+    if(sendLabel){sw.append(h("span","send-label",sendLabel));}
+    const s=h("button","send "+(activeSend?"on":"off"));s.innerHTML=UP;sw.append(s);
+    row.append(sw);c.append(row);
+    return c;
+  }
+
+  // A1 — in-composer takeover: the box itself becomes the question
+  function vInBox(root,st,api){
+    const wrap=h("div","welcome");
+    wrap.append(Object.assign(h("div","greet"),{textContent:"Good afternoon"}));
+    wrap.append(Object.assign(h("div","subtitle"),{textContent:"Start a new invention by describing your research direction."}));
+    const mw=h("div","maxw");
+    let inner;
+    if(st.idx>=6){ inner=api.composedEl(st,api.reset); }
+    else if(st.loading){ inner=api.genRow(); }
+    else{ inner=h("div"); inner.append(api.qHeadEl(st.idx)); inner.append(h("div","qtext",ALL[st.idx].q)); inner.append(api.choicesEl(st.idx,api.pick)); }
+    mw.append(composerShell(inner,{activeSend:st.idx>=6}));
+    if(st.idx>=6){ const cap=h("div","cap");cap.append(document.createTextNode("↑ this prompt is sent to start the run — same as typing it • "));const b=h("button","back","start over");b.onclick=api.reset;cap.append(b);mw.append(cap); }
+    else{ mw.append(Object.assign(h("div","cap"),{textContent:"the composer becomes the question · pick one, or type your own"})); }
+    wrap.append(mw);
+    root.append(wrap);
+  }
+
+  // A2 — tray under the composer: real box stays, options in a matching card below
+  function vTray(root,st,api){
+    const wrap=h("div","welcome");
+    wrap.append(Object.assign(h("div","greet"),{textContent:"Good afternoon"}));
+    wrap.append(Object.assign(h("div","subtitle"),{textContent:"Start a new invention by describing your research direction."}));
+    const mw=h("div","maxw");
+    // the real composer, quiet, with a Guide-me pill active
+    const ph=h("div","ta ph",st.idx>=6?"Prompt ready ✓":"What would you like to invent?");
+    mw.append(composerShell(ph,{activeSend:st.idx>=6}));
+    if(st.idx<6){
+      const tray=h("div","composer");tray.style.marginTop="8px";
+      if(st.loading){tray.append(api.genRow());}
+      else{tray.append(api.qHeadEl(st.idx));tray.append(h("div","qtext",ALL[st.idx].q));tray.append(api.choicesEl(st.idx,api.pick));}
+      mw.append(tray);
+    }else{
+      const c=h("div","composer");c.style.marginTop="8px";c.append(api.composedEl(st,api.reset));mw.append(c);
+    }
+    // guide-me pill row (real style)
+    const pills=h("div","pills");
+    const g=h("span","pill guide");g.innerHTML='<span class="ico">'+SPARKLE_SM+'</span>Guide me';pills.append(g);
+    ["Relational deep learning","LLM multiagents","LLM evaluation"].forEach(l=>{const p=h("span","pill",l);pills.append(p);});
+    mw.append(pills);
+    wrap.append(mw);root.append(wrap);
+  }
+
+  // A3 — options replace the pills row (question above the box, choices where pills were)
+  function vPillsSlot(root,st,api){
+    const wrap=h("div","welcome");
+    wrap.append(Object.assign(h("div","greet"),{textContent:"Good afternoon"}));
+    if(st.idx<6&&!st.loading){
+      const hd=h("div");hd.style.width="100%";hd.style.maxWidth="520px";hd.style.textAlign="center";hd.style.margin="0 0 12px";
+      const qh=api.qHeadEl(st.idx);qh.style.justifyContent="center";hd.append(qh);
+      hd.append(Object.assign(h("div","qtext"),{textContent:ALL[st.idx].q,style:"text-align:center"}));
+      wrap.append(hd);
+    }else{
+      wrap.append(Object.assign(h("div","subtitle"),{textContent:"Start a new invention by describing your research direction."}));
+    }
+    const mw=h("div","maxw");
+    const ph=h("div","ta ph",st.idx>=6?"Prompt ready ✓":"…or type it yourself");
+    mw.append(composerShell(st.idx>=6?api.composedEl(st,api.reset):ph,{activeSend:st.idx>=6}));
+    if(st.loading){const g=h("div");g.style.maxWidth="520px";g.style.margin="14px auto 0";g.append(api.genRow());mw.append(g);}
+    else if(st.idx<6){const slot=h("div");slot.style.marginTop="14px";slot.append(api.choicesEl(st.idx,api.pick));mw.append(slot);}
+    wrap.append(mw);root.append(wrap);
+  }
+
+  const GUIDED=[
+    {name:"In-composer takeover",note:"The real ComposerBox becomes the question; the send button starts the run when done.",mount:vInBox},
+    {name:"Tray under the box",note:"The real composer stays put (Guide me pill active); questions appear in a matching card below.",mount:vTray},
+    {name:"Choices where the pills are",note:"Question sits above the box; the multiple-choice options take the topic-pills slot.",mount:vPillsSlot},
   ];
-  const gallery=document.getElementById("gallery");
-  VARIANTS.forEach((v,i)=>{
-    const card=h("div","card variant");
-    const head=h("div","vhead");
-    head.append(h("div","vnum",String(i+1).padStart(2,"0")));
-    const tt=h("div",null);tt.append(h("div","vtitle",v[1]));tt.append(h("div","vblurb",v[2]));
-    head.append(tt);head.append(h("div","vtag",v[3]));
-    card.append(head);
-    const demo=h("div","demo m-"+v[0]);card.append(demo);
-    gallery.append(card);
-    runFlow(demo,v[0]);
+
+  const gwrap=document.getElementById("guided");
+  GUIDED.forEach((v,i)=>{
+    const card=h("div","variant");
+    const lab=h("div","vlabel");lab.append(Object.assign(h("span","vnum"),{textContent:"A"+(i+1)}));lab.append(Object.assign(h("span","vname"),{textContent:v.name}));
+    const tag=h("span","tagreal","real composer + ReviewTypeList");tag.style.marginLeft="auto";lab.append(tag);
+    card.append(lab);
+    card.append(Object.assign(h("div","vnote"),{textContent:v.note}));
+    const screen=h("div","screen tall");card.append(screen);
+    guidedFlow(screen,v.mount);
+    gwrap.append(card);
   });
 
-  // ================= existing-run "?" tooltip demo =================
+  // ===== Fork / resume: real composer + mini Details tree =====
   const MODULES=[
-    {id:"seed_hypo",name:"seed_hypo",state:"done"},
-    {id:"hypo_loop",name:"hypo_loop",state:"done"},
-    {id:"invention_loop",name:"invention_loop",state:"run"},
-    {id:"gen_paper_repo",name:"gen_paper_repo",state:"pend"},
+    {id:"seed_hypo",name:"seed_hypo",state:"done",hex:"#0d9488"},
+    {id:"hypo_loop",name:"hypo_loop",state:"done",hex:"#7c3aed"},
+    {id:"invention_loop",name:"invention_loop",state:"run",hex:"#3b82f6"},
+    {id:"gen_paper_repo",name:"gen_paper_repo",state:"pend",hex:"#e07d1c"},
   ];
-  const STATE_LABEL={done:"done",run:"running",pend:"pending",err:"errored"};
-  const STATE_CLS={done:"st-done",run:"st-run",pend:"st-pend",err:"st-err"};
-  const tt={mode:"fork",sel:"invention_loop",parentRunning:true};
+  const STATE_LABEL={done:"done",run:"running",pend:"pending"};
+  const STATE_CLS={done:"st-done",run:"st-run",pend:"st-pend"};
 
-  const ctl=document.getElementById("ttctl");
-  const stage=document.getElementById("ttstage");
-
-  function lastActive(){
-    // last module that is running or done (resume continues from here)
-    let last=MODULES[0].id;
-    MODULES.forEach(m=>{if(m.state==="run"||m.state==="done"||m.state==="err")last=m.id;});
-    return last;
+  function modeFor(m){
+    if(m.state==="run") return {mode:"steer",label:`Send to ${m.name}`,ph:`Message '${m.name}'…`,canSend:true};
+    if(m.state==="done") return {mode:"fork",label:`Fork at ${m.name}`,ph:`Message '${m.name}'…`,canSend:true};
+    return {mode:"disabled",label:null,ph:"Select a completed step to fork",canSend:false};
   }
-  function idxOf(id){return MODULES.findIndex(m=>m.id===id);}
-
-  function tooltipText(){
-    const sel=tt.sel, selIdx=idxOf(sel), selMod=MODULES[selIdx];
-    if(tt.mode==="resume"){
-      const la=lastActive();
-      return {
-        cls:"resume",title:"Resume",
-        html:`Continue this run from its last-active module, <span class="modref">${la}</span>. `+
-             `Under the hood that's a fork at <span class="modref">${la}</span> keeping the same id lineage — `+
-             `everything before it stays as computed; <span class="modref">${la}</span> onward re-executes.`,
-        hint:tt.parentRunning
-          ? "This run is still running — resume waits for the current module to settle, then takes over."
-          : "This run is stopped — resume picks up cleanly from where it left off."
-      };
-    }
-    // fork
-    const before=MODULES.slice(0,selIdx).map(m=>m.name);
-    const carried=before.length?before.join(", "):"—";
-    return {
-      cls:"fork",title:"Fork",
-      html:`Branch a <b>new</b> run at <span class="modref">${sel}</span>. `+
-           `Modules before it (${carried}) are carried over by reference — not re-run — and `+
-           `<span class="modref">${sel}</span> onward executes fresh with your changes.`,
-      hint:tt.parentRunning
-        ? "Parent is still running → this is a hot fork (a live sibling with a new id)."
-        : "Parent is finished → forking from a terminal run (same shape as “resume from a stopped run”)."
-    };
+  function tipFor(m){
+    if(m.state==="run") return {cls:"steer",title:`Send — steer ${m.name}`,html:`Your message steers the <b>running</b> <span class="mod">${m.name}</span> in place — the same run continues (a hot-resume). Nothing branches.`};
+    if(m.state==="done") return {cls:"fork",title:`Fork at ${m.name}`,html:`Starts a <b>new</b> run branched at <span class="mod">${m.name}</span>. Earlier modules are carried over by reference; <span class="mod">${m.name}</span> onward re-runs from your message. The parent run is untouched.`};
+    return null;
   }
 
-  function renderCtl(){
-    ctl.innerHTML="";
-    ctl.append(Object.assign(h("div","mlabel"),{textContent:"Scenario"}));
-    // mode segmented
-    const seg=h("div","seg "+(tt.mode==="fork"?"forkseg":"resseg"));
-    ["resume","fork"].forEach(m=>{const b=h("button",tt.mode===m?"on":null,m[0].toUpperCase()+m.slice(1));b.onclick=()=>{tt.mode=m;renderAll();};seg.append(b);});
-    const segwrap=h("div",null);segwrap.append(seg);
-    const segcap=h("div","tt-caption",tt.mode==="resume"?"resume = fork at the last-active module":"fork = branch at any chosen module");
-    segwrap.append(segcap);ctl.append(segwrap);
-
-    // module picker
-    const ml=h("div","mlabel");ml.textContent="Selected module"+(tt.mode==="resume"?"  (resume ignores this — it uses last-active)":"");ml.style.marginTop="4px";ctl.append(ml);
-    const mr=h("div","modrow");
+  function forkVariant(root,{inlineHelper}){
+    const sel={id:"invention_loop"};
+    const view=h("div","runview");
+    const tree=h("div","tree");
+    tree.append(h("div","tree-h","Details"));
     MODULES.forEach((m,i)=>{
-      const sel=(tt.mode==="fork"&&tt.sel===m.id)||(tt.mode==="resume"&&lastActive()===m.id);
-      const row=h("div","mod"+(sel?" sel":""));
-      row.append(h("span","mseq",String(i+1)));
-      row.append(h("span","mname",m.name));
-      const st=h("span","mstate "+STATE_CLS[m.state],STATE_LABEL[m.state]);
-      row.append(st);
-      row.onclick=()=>{
-        if(tt.mode==="fork"){tt.sel=m.id;}
-        // clicking a module also cycles its state, to show "as module states change"
-        else{cycleState(m);}
-        renderAll();
-      };
-      // in fork mode a second control cycles state: shift-click
-      row.oncontextmenu=e=>{e.preventDefault();cycleState(m);renderAll();};
-      mr.append(row);
+      const r=h("div","trow"+(m.id===sel.id?" sel":""));
+      const d=h("span","dot");d.style.background=m.hex;r.append(d);
+      r.append(h("span","tname",m.name));
+      r.append(Object.assign(h("span","tstate "+STATE_CLS[m.state]),{textContent:STATE_LABEL[m.state]}));
+      r.onclick=()=>{sel.id=m.id;paint();};
+      r._m=m;tree._rows=tree._rows||[];tree._rows.push(r);
+      tree.append(r);
     });
-    ctl.append(mr);
-    ctl.append(Object.assign(h("div","tt-caption"),{innerHTML:tt.mode==="fork"?"click a module to select it · right-click to cycle its state":"click any module to cycle its state (drives “last-active”)"}));
+    view.append(tree);
 
-    // parent running toggle
-    const pt=h("div","parent-toggle");pt.style.marginTop="6px";
-    const sw=h("div","switch"+(tt.parentRunning?" on":""));sw.setAttribute("role","switch");sw.setAttribute("aria-checked",tt.parentRunning);
-    sw.onclick=()=>{tt.parentRunning=!tt.parentRunning;renderAll();};
-    pt.append(sw,h("span",null,"Parent run is still running"));
-    ctl.append(pt);
+    const composerHost=h("div");view.append(composerHost);
+    const helperHost=h("div");view.append(helperHost);
+    const tipHost=h("div");view.append(tipHost);
+
+    function paint(){
+      const m=MODULES.find(x=>x.id===sel.id);
+      const info=modeFor(m), tip=tipFor(m);
+      // tree selected pill (real accent pill: hexA(hex,0.1)+glow)
+      tree._rows.forEach(r=>{
+        const on=r._m.id===sel.id;r.classList.toggle("sel",on);
+        if(on){const hx=r._m.hex;r.style.background=hexA(hx,.10);r.style.borderRadius="999px";r.style.boxShadow=`0 1px 4px ${hexA(hx,.25)}, 0 0 8px ${hexA(hx,.10)}`;}
+        else{r.style.background="";r.style.boxShadow="";r.style.borderRadius="8px";}
+      });
+      // composer
+      composerHost.innerHTML="";
+      const ph=h("div","ta ph",info.ph);
+      const inner=ph;
+      const qm=h("span","qmark","?");
+      const box=composerShellWithQ(inner,info,qm,inlineHelper);
+      composerHost.append(box);
+      // helper line (variant B2) or tooltip below the "?" (both)
+      helperHost.innerHTML="";
+      if(inlineHelper && info.mode!=="disabled"){
+        const hl=h("div","helper");hl.style.padding="0 4px";
+        hl.append(Object.assign(h("span","send-label"),{textContent:info.mode==="fork"?"This will FORK a new run.":"This will STEER the current run."}));
+        const qm2=h("span","qmark","?");hl.append(qm2);
+        wireTip(qm2,tipHost,tip);
+        helperHost.append(hl);
+      }
+      // tooltip host + hover wiring on the composer "?"
+      tipHost.innerHTML="";
+      if(info.mode==="disabled"){ tipHost.append(Object.assign(h("div","disablednote"),{textContent:"Pending step — pick a completed module to fork, or the running one to steer."})); }
+      else { wireTip(qm,tipHost,tip); renderTip(tipHost,tip); }
+    }
+    function renderTip(host,tip){
+      host.innerHTML="";const t=h("div","tip "+tip.cls);
+      const th=h("div","th");th.innerHTML=(tip.cls==="fork"?"⑂ ":"↩ ")+tip.title;t.append(th);
+      t.append(Object.assign(h("p"),{innerHTML:tip.html,style:"margin:0"}));host.append(t);
+    }
+    function wireTip(qm,host,tip){ qm.onmouseenter=()=>renderTip(host,tip); qm.onclick=()=>renderTip(host,tip); }
+
+    paint();
+    root.append(view);
   }
-  function cycleState(m){const order=["done","run","pend","err"];m.state=order[(order.indexOf(m.state)+1)%order.length];}
-
-  function renderStage(){
-    stage.innerHTML="";
-    const info=tooltipText();
-    const rr=h("div","runrow");
-    rr.append(Object.assign(h("span","rtitle"),{textContent:"run_Z4TP…  ·  “multi-agent coordination”"}));
-    const rm=h("span","rmode "+info.cls,info.title);rr.append(rm);
-    const q=h("div","qmark","?");q.setAttribute("aria-label","What will "+info.title+" do?");
-    rr.append(q);stage.append(rr);
-    stage.append(Object.assign(h("div","tt-caption"),{textContent:"hover the “?” →  (tooltip below shows live)"}));
-    const tip=h("div","tooltip "+info.cls);
-    const th=h("div","th");th.innerHTML=(info.cls==="fork"?"⑂ ":"⤿ ")+info.title+" — from "+(tt.mode==="fork"?tt.sel:lastActive());
-    tip.append(th);
-    tip.append(Object.assign(h("p"),{innerHTML:info.html}));
-    const hint=h("div","hintline");hint.innerHTML="<span>◆</span><span>"+info.hint+"</span>";tip.append(hint);
-    stage.append(tip);
-    // wire hover to toggle a subtle emphasis (tooltip is always shown here for demo clarity)
-    q.addEventListener("mouseenter",()=>tip.style.boxShadow="0 0 0 3px var(--accent-soft), var(--shadow-lg)");
-    q.addEventListener("mouseleave",()=>tip.style.boxShadow="var(--shadow-lg)");
+  function composerShellWithQ(inner,info,qm,inlineHelper){
+    const c=h("div","composer");
+    c.append(inner);
+    const row=h("div","crow");
+    const att=h("button","attach");att.innerHTML=PLUS;row.append(att);
+    const sw=h("div","sendwrap");
+    if(info.label){ sw.append(Object.assign(h("span","send-label"),{textContent:info.label})); }
+    if(!inlineHelper && info.mode!=="disabled"){ sw.append(qm); }
+    const s=h("button","send "+(info.canSend?"on":"off"));s.innerHTML=UP;sw.append(s);
+    row.append(sw);c.append(row);
+    return c;
   }
-  function renderAll(){renderCtl();renderStage();}
-  renderAll();
+  function hexA(hex,a){const n=parseInt(hex.slice(1),16);return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`;}
 
-  // ---- provider latency injection point (updated post-benchmark) ----
-  window.__setProv=function(data){
-    // data: {slug:{median:"x.xs", win:bool}}, note:string
-    Object.keys(data.rows||{}).forEach(slug=>{
-      const cell=document.querySelector('.lat[data-p="'+slug+'"]');if(!cell)return;
-      const r=data.rows[slug];cell.textContent=r.median;
-      if(r.win){const td=cell.nextElementSibling;if(td)td.innerHTML='<span class="pill win">fastest</span>';}
-    });
-    if(data.note)document.getElementById("provnote").innerHTML=data.note;
-    document.getElementById("provstate").textContent=data.state||"done";
-  };
+  const FORK=[
+    {name:"“?” beside the send button",note:"The real composer. The send label already says Fork at X / Send to X; a small ? next to it explains what that does — and both change with the module you pick in the tree.",mount:r=>forkVariant(r,{inlineHelper:false})},
+    {name:"“?” on a helper line",note:"Same real composer, but the fork-vs-steer intent is spelled out on a helper line under the box with its own ? — for when the tooltip alone feels too subtle.",mount:r=>forkVariant(r,{inlineHelper:true})},
+  ];
+  const fwrap=document.getElementById("forkresume");
+  FORK.forEach((v,i)=>{
+    const card=h("div","variant");
+    const lab=h("div","vlabel");lab.append(Object.assign(h("span","vnum"),{textContent:"B"+(i+1)}));lab.append(Object.assign(h("span","vname"),{textContent:v.name}));
+    const tag=h("span","tagreal","real composer + Details tree");tag.style.marginLeft="auto";lab.append(tag);
+    card.append(lab);
+    card.append(Object.assign(h("div","vnote"),{textContent:v.note}));
+    const screen=h("div","screen");card.append(screen);
+    v.mount(screen);
+    fwrap.append(card);
+  });
 })();
 </script>
 </body></html>
