@@ -2,17 +2,17 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Guided setup + fork/resume — variants in your real UI</title>
+<title>Guided setup + fork/resume — final UI mocks</title>
 </head><body>
-<title>Guided setup + fork/resume — variants in your real UI</title>
+<title>Guided setup + fork/resume — final UI mocks</title>
 <style>
   :root{
     --bg:#fbfaf8; --composer:rgba(255,253,250,0.9);
     --ink:#1a1a2e; --muted:#8a8a9a; --muted2:#6b7280; --faint:#9ca3af; --ph:#b0b0be;
     --line:rgba(0,0,0,.06); --line2:rgba(0,0,0,.08); --line-hover:rgba(0,0,0,.25);
     --sel-border:#1a1a2e; --sel-bg:rgba(26,26,46,.04); --send-inert:#e8e8ec;
-    --indigo-50:#eef2ff; --indigo-100:#e0e7ff; --indigo-200:#c7d2fe; --indigo-500:#6366f1; --indigo-600:#4f46e5; --indigo-700:#4338ca;
-    --teal:#0d9488; --blue:#3b82f6; --slate600:#475569; --slate700:#334155;
+    --indigo-50:#eef2ff; --indigo-100:#e0e7ff; --indigo-200:#c7d2fe; --indigo-600:#4f46e5; --indigo-700:#4338ca;
+    --teal:#0d9488; --blue:#3b82f6; --slate500:#64748b; --slate700:#334155;
     --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --serif:ui-serif,Georgia,"Times New Roman",serif; --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   }
@@ -20,25 +20,25 @@
   body{background:#e9e7e2;color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.5}
   @media (prefers-color-scheme:dark){body{background:#0d0f13}}
   :root[data-theme="dark"] body{background:#0d0f13} :root[data-theme="light"] body{background:#e9e7e2}
-  .wrap{max-width:760px;margin:0 auto;padding:26px 16px 120px}
+  .wrap{max-width:600px;margin:0 auto;padding:26px 16px 90px}
   .lead .eyebrow{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;opacity:.6}
   .lead h1{font-size:1.28rem;margin:.35rem 0 0;letter-spacing:-.01em;font-weight:640}
-  .lead p{margin:.5rem 0 0;font-size:.88rem;opacity:.8;max-width:62ch}
-  .lead{color:#2a2a33} :root[data-theme="dark"] .lead{color:#eee}
-  @media (prefers-color-scheme:dark){.lead{color:#eee}}
-  .section-tab{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:#2a2a33;opacity:.65;margin:38px 2px 4px;font-weight:600}
+  .lead p{margin:.5rem 0 0;font-size:.88rem;opacity:.8}
+  .lead{color:#2a2a33} :root[data-theme="dark"] .lead{color:#eee} @media (prefers-color-scheme:dark){.lead{color:#eee}}
+  .section-tab{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:#2a2a33;opacity:.65;margin:40px 2px 4px;font-weight:600}
   :root[data-theme="dark"] .section-tab{color:#ddd} @media (prefers-color-scheme:dark){.section-tab{color:#ddd}}
-  .variant{margin-top:22px}
-  .vlabel{display:flex;align-items:baseline;gap:10px;margin:0 2px 7px;color:#2a2a33}
-  :root[data-theme="dark"] .vlabel{color:#e6e6ea} @media (prefers-color-scheme:dark){.vlabel{color:#e6e6ea}}
-  .vnum{font-family:var(--mono);font-size:.72rem;opacity:.6} .vname{font-weight:600;font-size:.95rem}
-  .tagreal{margin-left:auto;font-family:var(--mono);font-size:.58rem;letter-spacing:.05em;text-transform:uppercase;opacity:.6}
-  .screen{background:var(--bg);border-radius:18px;padding:24px 16px 24px;box-shadow:0 10px 30px -16px rgba(0,0,0,.5);overflow:visible}
+  .mock{margin-top:20px}
+  .mlabel{display:flex;align-items:baseline;gap:9px;margin:0 2px 8px;color:#2a2a33}
+  :root[data-theme="dark"] .mlabel{color:#e6e6ea} @media (prefers-color-scheme:dark){.mlabel{color:#e6e6ea}}
+  .mnum{font-family:var(--mono);font-size:.74rem;opacity:.55}
+  .mname{font-weight:600;font-size:.98rem}
+  .mtag{margin-left:auto;font-family:var(--mono);font-size:.58rem;letter-spacing:.05em;text-transform:uppercase;opacity:.55}
+  .screen{background:var(--bg);border-radius:18px;padding:26px 16px 26px;box-shadow:0 10px 30px -16px rgba(0,0,0,.5);overflow:visible}
 
   .welcome{display:flex;flex-direction:column;align-items:center}
   .greet{font-family:var(--serif);font-size:1.9rem;line-height:1.1;letter-spacing:-.01em;color:var(--ink);text-align:center}
-  .subtitle{margin:.55rem 0 1.2rem;font-size:.84rem;color:var(--muted);text-align:center}
-  .maxw{width:100%;max-width:520px}
+  .subtitle{margin:.55rem 0 1.3rem;font-size:.84rem;color:var(--muted);text-align:center}
+  .maxw{width:100%;max-width:480px}
   .composer{position:relative;display:flex;flex-direction:column;gap:12px;border-radius:24px;border:1px solid var(--line);
     background:var(--composer);box-shadow:0 2px 8px rgba(0,0,0,.04);padding:15px 14px 11px}
   .ta{min-height:22px;font-size:.9rem;color:var(--ink)} .ta.ph{color:var(--ph)}
@@ -50,12 +50,13 @@
   .sendwrap{display:flex;align-items:center;gap:8px}
   .send{width:36px;height:36px;border-radius:999px;display:grid;place-items:center;border:0;cursor:pointer}
   .send.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)} .send.off{background:var(--send-inert);color:var(--ph)}
-  .pills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:15px}
-  .pill{display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:8px 14px;font-size:12.5px;border:1px solid var(--line2);background:#fff;color:#4a4a5a;cursor:pointer;white-space:nowrap}
+  /* example pills — exact app styling */
+  .pills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:16px}
+  .pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;border:1px solid var(--line2);background:#fff;padding:8px 16px;font-size:12.5px;color:#4a4a5a;cursor:pointer;white-space:nowrap;transition:border-color .12s,background .12s}
   .pill:hover{border-color:var(--line-hover);background:rgba(0,0,0,.02)}
+  .pill .ico{width:14px;height:14px;color:var(--slate500)}
   .pill.guide{border-color:var(--indigo-200);background:var(--indigo-50);color:var(--indigo-700);font-weight:500}
-  .pill.guide:hover{border-color:#a5b4fc;background:var(--indigo-100)}
-  .pill .ico{width:14px;height:14px;color:#64748b} .pill.guide .ico{color:var(--indigo-600)}
+  .pill.guide:hover{border-color:#a5b4fc;background:var(--indigo-100)} .pill.guide .ico{color:var(--indigo-600)}
 
   .qhead{display:flex;align-items:center;gap:8px;margin-bottom:9px}
   .qcount{font-size:12px;color:var(--muted)}
@@ -63,14 +64,9 @@
   .qtag.fixed{background:rgba(0,0,0,.05);color:#6a6a7a}
   .qtag.gen{background:var(--indigo-50);color:var(--indigo-600);display:inline-flex;gap:4px;align-items:center}
   .qtext{font-size:14.5px;font-weight:560;line-height:1.3;color:var(--ink);margin-bottom:10px}
-  .dots{display:flex;gap:5px;align-items:center;margin-left:auto}
-  .dot{width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,.14)}
-  .dot.on{background:var(--ink)} .dot.cur{transform:scale(1.5)} .dot.gen.on{background:var(--indigo-500)}
   .choices{display:flex;flex-direction:column;gap:7px}
   .choice{display:flex;align-items:center;gap:8px;width:100%;text-align:left;cursor:pointer;border-radius:8px;
-    border:1px solid rgba(0,0,0,.05);background:#fff;color:var(--slate700);padding:9px 11px;font-size:13px;
-    transition:border-color .12s,background .12s;font-family:inherit}
-  .compact .choice{padding:7px 10px}
+    border:1px solid rgba(0,0,0,.05);background:#fff;color:var(--slate700);padding:9px 11px;font-size:13px;transition:border-color .12s,background .12s;font-family:inherit}
   .choice:hover{border-color:var(--line-hover)}
   .choice.sel{border-color:var(--sel-border);background:var(--sel-bg);color:var(--ink);font-weight:500}
   .choice .chk{margin-left:auto;color:var(--ink);opacity:0;transition:opacity .12s} .choice.sel .chk{opacity:1}
@@ -79,7 +75,6 @@
   .choice.typ input::placeholder{color:var(--ph)}
   .skiplink{border:0;background:transparent;color:var(--faint);font:inherit;font-size:12px;cursor:pointer;padding:8px 2px 0;text-align:left}
   .skiplink:hover{color:var(--muted2)}
-
   .opt-tray-head{display:flex;align-items:center;gap:9px;margin-bottom:11px;font-size:12px;color:var(--muted2)}
   .optlabel{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--indigo-50);color:var(--indigo-700);border-radius:999px;padding:3px 9px;flex:none}
   .closex{margin-left:auto;border:0;background:transparent;color:var(--muted);font:inherit;font-size:13px;cursor:pointer;padding:2px 6px;border-radius:6px;line-height:1}
@@ -87,16 +82,6 @@
   .preview-card{margin-top:10px;background:rgba(0,0,0,.025);border:1px dashed var(--line2);border-radius:12px;padding:11px 12px}
   .plabel{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:6px}
   .ptext{font-size:12.5px;line-height:1.5;color:var(--ink);white-space:pre-wrap}
-  .chiprow{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
-  .achip{display:inline-flex;align-items:center;gap:7px;background:var(--sel-bg);border:1px solid rgba(26,26,46,.14);color:var(--ink);border-radius:999px;padding:5px 6px 5px 11px;font-size:12px}
-  .achx{cursor:pointer;color:var(--muted);font-weight:700;line-height:1;padding:0 2px} .achx:hover{color:var(--ink)}
-  .hair{height:1px;background:var(--line);margin:12px 0}
-  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:10px} @media (max-width:560px){.twocol{grid-template-columns:1fr}}
-  .gpanel{margin-top:12px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
-  .overlay{margin-top:10px;background:#fff;border:1px solid var(--line2);border-radius:14px;padding:15px;box-shadow:0 20px 45px -18px rgba(0,0,0,.45)}
-  .chat{display:flex;flex-direction:column;gap:9px}
-  .abub{align-self:flex-start;max-width:88%;background:rgba(0,0,0,.04);border-radius:13px;border-bottom-left-radius:4px;padding:9px 12px;font-size:13px;color:#3a3a4a}
-  .abub.gen{background:var(--indigo-50)}
   .gen-row{display:flex;align-items:center;gap:9px;color:var(--indigo-600);font-size:13px;padding:3px 0}
   .spark{width:15px;height:15px;animation:pulse 1.3s ease-in-out infinite}
   @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
@@ -104,39 +89,29 @@
   .shim.b{width:80%} @keyframes sweep{to{background-position:-220% 0}}
   @media (prefers-reduced-motion:reduce){.shim,.spark{animation:none}}
 
-  /* fork/resume — corner "?" (B2) + hover/tap tooltip */
-  .runctx{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:9px}
+  /* fork/resume — corner "?" + clean hover tooltip, no captions */
   .qi{width:19px;height:19px;border-radius:999px;border:1px solid var(--line2);color:var(--muted);display:grid;place-items:center;cursor:help;background:#fff;position:absolute;top:12px;right:13px;z-index:5}
-  .qi:hover{border-color:var(--indigo-500);color:var(--indigo-600)}
-  .qi svg{width:11px;height:11px} .qi .g{font-size:11px;font-weight:700;line-height:1}
-  .qi .dotm{position:absolute;top:-2px;right:-2px;width:6px;height:6px;border-radius:50%;border:1.5px solid #fff}
-  .composer .fptip{position:absolute;left:12px;right:12px;z-index:40;text-align:left;border-radius:12px;border:1px solid var(--line2);
+  .qi:hover{border-color:var(--teal);color:var(--teal)} .qi .g{font-size:11px;font-weight:700;line-height:1}
+  .composer .fptip{position:absolute;left:12px;right:12px;bottom:calc(100% + 8px);z-index:40;text-align:left;border-radius:12px;border:1px solid var(--line2);border-top:2px solid var(--teal);
     background:#fff;padding:11px 12px;box-shadow:0 14px 34px -12px rgba(0,0,0,.45);font-size:12px;line-height:1.5;color:#374151;
-    opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .13s,transform .13s;pointer-events:none}
-  .composer .fptip.below{top:calc(100% + 8px)} .composer .fptip.above{bottom:calc(100% + 8px);transform:translateY(-4px)}
-  .composer .fptip.accent{border-top:2px solid var(--teal)}
+    opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .13s,transform .13s;pointer-events:none}
   .composer.tipopen .fptip{opacity:1;visibility:visible;transform:none;pointer-events:auto}
-  .fptip .th{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted2);margin-bottom:6px}
   .fptip b.fork{color:var(--teal)} .fptip b.steer{color:var(--blue)}
-  .fptip .trow{display:flex;gap:8px;margin-bottom:6px} .fptip .trow:last-child{margin-bottom:0}
-  .fptip .trow .k{font-weight:700;flex:none;width:42px} .fptip .trow.fork .k{color:var(--teal)} .fptip .trow.steer .k{color:var(--blue)}
   .svg-ico{stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 </style>
 
 <div class="wrap">
   <div class="lead">
-    <div class="eyebrow">AI Inventor · variants in your real UI</div>
-    <h1>Guided questions (Guide-me pill) &amp; fork/resume (corner “?”) — 10 variants each</h1>
-    <p>Your chosen directions, on the real composer: “Guide me” is a pill in the examples row; the fork/resume “?”
-      sits in the top-right corner (B2) and reveals its explainer on hover/tap. Optional throughout — typing and
-      answering combine. Scroll; each is live.</p>
+    <div class="eyebrow">AI Inventor · final UI mocks</div>
+    <h1>Guide me &amp; fork/resume — final mocks on the real composer</h1>
+    <p>Live. The Guide-me flow in its two states, and the fork/resume “?” in the corner.</p>
   </div>
 
-  <div class="section-tab">A · Guided flow (opens from the Guide me pill) — 10 variants</div>
-  <div id="guided"></div>
+  <div class="section-tab">Guide me — the two states</div>
+  <div id="guide"></div>
 
-  <div class="section-tab">B · Fork vs resume — corner “?” tooltip — 10 variants</div>
-  <div id="forkresume"></div>
+  <div class="section-tab">Fork vs resume — the corner “?”</div>
+  <div id="fork"></div>
 </div>
 
 <script>
@@ -150,8 +125,9 @@
   const PEN=S('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>',14);
   const PLUS=S('<path d="M12 5v14M5 12h14"/>',18);
   const UP=`<svg class="svg-ico" viewBox="0 0 24 24" style="width:16px;height:16px;stroke-width:2.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg>`;
-  const INFO=S('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',12);
-  const FORKG=S('<circle cx="12" cy="18" r="2.4"/><circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="6" r="2.4"/><path d="M18 8.4v1A2.6 2.6 0 0 1 15.4 12H8.6A2.6 2.6 0 0 1 6 9.4v-1"/><path d="M12 12v3.6"/>',12);
+  const IC_NET=S('<rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-2a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2M12 12V8"/>',14);
+  const IC_BOOK=S('<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/><path d="M6 8h1.5M6 11h1.5M16.5 8H18M16.5 11H18"/>',14);
+  const IC_GLOBE=S('<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',14);
 
   const FIXED=[
     {q:"What should this run explore?",opts:["LLM multi-agent systems","Mechanistic interpretability","Long-context retrieval methods"]},
@@ -164,8 +140,8 @@
     {q:"What baseline should it beat?",opts:["A single strong model","A fixed hierarchical controller","Round-robin role assignment"]},
   ];
   const ALL=FIXED.concat(AI);
-  // examples with the "LLM multiagents" pill removed
-  const EXAMPLES=["Relational deep learning","Linguistics","Political economy","LLM evaluation"];
+  // real example pills, minus LLM multiagents and LLM evaluation
+  const EX=[{label:"Relational deep learning",ic:IC_NET},{label:"Linguistics",ic:IC_BOOK},{label:"Political economy",ic:IC_GLOBE}];
   const lc=s=>s?s.charAt(0).toLowerCase()+s.slice(1):"…";
   const compose=a=>`Explore ${a[0]||"…"}, aiming to ${lc(a[1])}. Constraint: ${a[2]||"…"}. Focus on ${lc(a[3])}, measured by ${lc(a[4])}, versus ${lc(a[5])}.`;
   function buildPrompt(typed,answers){
@@ -177,7 +153,6 @@
     const bullets=answered.map(x=>"• "+x.a).join("\n");
     return t?(t+"\n\nGuided details:\n"+bullets):("Guided setup:\n"+bullets);
   }
-
   function typeChoice(onPick,clearSel){
     const t=h("div","choice typ");const pen=h("span","pen");pen.innerHTML=PEN;t.append(pen);
     const inp=document.createElement("input");inp.type="text";inp.placeholder="Type your answer…";t.append(inp);
@@ -193,119 +168,68 @@
   }
   function genRow(){const w=h("div");const r=h("div","gen-row");r.innerHTML=SPARK+"<span>Generating 3 follow-ups…</span>";w.append(r,h("div","shim"),h("div","shim b"));return w;}
 
-  // ---- shared builders ----
-  function welcomeWrap(sub){const w=h("div","welcome");w.append(Object.assign(h("div","greet"),{textContent:"Good afternoon"}));w.append(Object.assign(h("div","subtitle"),{textContent:sub}));return w;}
-  function makeTextarea(api){const ta=document.createElement("textarea");ta.className="ta-real";ta.rows=2;ta.placeholder="What would you like to invent?";ta.value=api.st.typed;ta.oninput=e=>{api.st.typed=e.target.value;api.updateMeta();};return ta;}
-  function makeControls(api){const row=h("div","crow");const att=h("button","attach");att.innerHTML=PLUS;row.append(att);const sw=h("div","sendwrap");const s=h("button","send off");s.innerHTML=UP;api.refs.send=s;sw.append(s);row.append(sw);return row;}
-  function makeComposer(api){const c=h("div","composer");c.append(makeTextarea(api));c.append(makeControls(api));return c;}
-  function trayHead(close,compact){const oh=h("div","opt-tray-head");oh.append(h("span","optlabel","Optional"));if(!compact)oh.append(h("span",null,"Answer any — or skip"));const x=h("button","closex","✕");x.style.marginLeft="auto";x.onclick=close;oh.append(x);return oh;}
-  function question(api){const st=api.st;const wrap=h("div");
-    if(st.idx>=6){const d=h("div","gen-row");d.style.color="var(--teal)";d.innerHTML=CHECK+"<span style='margin-left:4px;color:var(--muted2)'>all questions answered</span>";wrap.append(d);return wrap;}
-    if(st.loading){wrap.append(genRow());return wrap;}
-    const qh=h("div","qhead");qh.append(h("span","qcount","Question "+(st.idx+1)+" of 6"));const tag=h("span","qtag "+(st.idx>=3?"gen":"fixed"));if(st.idx>=3)tag.innerHTML=SPK+" generated";else tag.textContent="fixed";qh.append(tag);wrap.append(qh);
-    wrap.append(h("div","qtext",ALL[st.idx].q));wrap.append(optionsEl(st.idx,v=>{st.ans[st.idx]=v;api.advance();}));
-    const sk=h("button","skiplink","Skip this question →");sk.onclick=()=>api.advance();wrap.append(sk);return wrap;}
-  function preview(api){const prev=h("div","preview-card");prev.append(Object.assign(h("div","plabel"),{textContent:"Starts the run with"}));const p=h("div","ptext");api.refs.preview=p;prev.append(p);return prev;}
-
-  // ---- guided engine: pills entry → active flow in layout N ----
-  const LAYOUTS={
-    trayBelow(mw,api,close){mw.append(makeComposer(api));const tr=h("div","composer");tr.style.marginTop="8px";tr.append(trayHead(close));tr.append(question(api));mw.append(tr);mw.append(preview(api));},
-    inlineBelow(mw,api,close){mw.append(makeComposer(api));const s=h("div");s.style.marginTop="14px";s.append(trayHead(close));s.append(question(api));mw.append(s);mw.append(preview(api));},
-    unifiedCard(mw,api,close){const c=h("div","composer");c.append(makeTextarea(api));c.append(h("div","hair"));c.append(trayHead(close));c.append(question(api));c.append(h("div","hair"));c.append(preview(api));c.append(makeControls(api));mw.append(c);},
-    twoColumn(mw,api,close){const g=h("div","twocol");g.append(makeComposer(api));const r=h("div","composer");r.append(trayHead(close));r.append(question(api));g.append(r);mw.append(g);mw.append(preview(api));},
-    chips(mw,api,close){mw.append(makeComposer(api));const ans=api.st.ans.map((a,i)=>a?{i,a}:null).filter(Boolean);if(ans.length){const cr=h("div","chiprow");ans.forEach(x=>{const chip=h("span","achip");chip.append(document.createTextNode(x.a));const xx=h("span","achx","×");xx.onclick=()=>{api.st.ans[x.i]=undefined;api.render();};chip.append(xx);cr.append(chip);});mw.append(cr);}const tr=h("div","composer");tr.style.marginTop="8px";tr.append(trayHead(close));tr.append(question(api));mw.append(tr);mw.append(preview(api));},
-    panel(mw,api,close){mw.append(makeComposer(api));const p=h("div","gpanel");p.append(trayHead(close));p.append(question(api));p.append(preview(api));mw.append(p);},
-    compact(mw,api,close){mw.append(makeComposer(api));const tr=h("div","composer compact");tr.style.marginTop="8px";tr.style.padding="11px 12px";tr.append(trayHead(close,true));tr.append(question(api));mw.append(tr);mw.append(preview(api));},
-    conversational(mw,api,close){mw.append(makeComposer(api));const th=h("div","chat");th.style.marginTop="11px";const oh=trayHead(close);th.append(oh);const st=api.st;for(let i=0;i<Math.min(st.idx,6);i++){const ab=h("div","abub"+(i>=3?" gen":""));ab.textContent=ALL[i].q;th.append(ab);}if(st.loading){const ab=h("div","abub gen");ab.innerHTML=SPK+" thinking up 3 follow-ups…";th.append(ab);}else if(st.idx<6){const ab=h("div","abub"+(st.idx>=3?" gen":""));ab.textContent=ALL[st.idx].q;th.append(ab);th.append(optionsEl(st.idx,v=>{st.ans[st.idx]=v;api.advance();}));}mw.append(th);mw.append(preview(api));},
-    stepper(mw,api,close){mw.append(makeComposer(api));const tr=h("div","composer");tr.style.marginTop="8px";const hd=h("div","opt-tray-head");hd.append(h("span","optlabel","Optional"));const dots=h("div","dots");for(let i=0;i<6;i++){const d=h("span","dot"+(i>=3?" gen":"")+(i<api.st.idx?" on":"")+(i===api.st.idx?" cur on":""));dots.append(d);}hd.append(dots);const x=h("button","closex","✕");x.onclick=close;hd.append(x);tr.append(hd);tr.append(question(api));mw.append(tr);mw.append(preview(api));},
-    overlay(mw,api,close){mw.append(makeComposer(api));const ov=h("div","overlay");ov.append(trayHead(close));ov.append(question(api));ov.append(preview(api));mw.append(ov);},
-  };
-  function guidedVariant(root,layout){
-    const st={typed:"",active:false,idx:0,ans:[],aiReady:false,loading:false};
+  // ---- Guide me flow (two states) ----
+  function guideFlow(root,startActive){
+    const st={typed:"",active:!!startActive,idx:0,ans:[],aiReady:false,loading:false};
     const refs={preview:null,send:null};
     const anyInput=()=>st.typed.trim()!==""||st.ans.some(Boolean);
     function updateMeta(){if(refs.preview)refs.preview.textContent=buildPrompt(st.typed,st.ans);if(refs.send)refs.send.className="send "+(anyInput()?"on":"off");}
     function advance(){if(st.idx===2&&!st.aiReady){st.idx=3;st.loading=true;render();setTimeout(()=>{st.loading=false;st.aiReady=true;render();},1000);return;}st.idx++;render();}
-    const api={st,refs,anyInput,updateMeta,advance,render:null};
+    function composer(){
+      const c=h("div","composer");
+      const ta=document.createElement("textarea");ta.className="ta-real";ta.rows=2;ta.placeholder="What would you like to invent?";ta.value=st.typed;
+      ta.oninput=e=>{st.typed=e.target.value;updateMeta();};c.append(ta);
+      const row=h("div","crow");const att=h("button","attach");att.innerHTML=PLUS;row.append(att);
+      const sw=h("div","sendwrap");const s=h("button","send off");s.innerHTML=UP;refs.send=s;sw.append(s);row.append(sw);c.append(row);return c;
+    }
     function render(){
       refs.preview=null;refs.send=null;root.innerHTML="";
-      const w=welcomeWrap(st.active?"Answer any — or type above. Both combine into the run.":"Start a new invention by describing your research direction.");
-      const mw=h("div","maxw");if(layout==='twoColumn')mw.style.maxWidth="640px";
+      const w=h("div","welcome");w.append(Object.assign(h("div","greet"),{textContent:"Good afternoon"}));
+      w.append(Object.assign(h("div","subtitle"),{textContent:st.active?"Answer any — or type above. Both combine into the run.":"Start a new invention by describing your research direction."}));
+      const mw=h("div","maxw");mw.append(composer());
       if(!st.active){
-        mw.append(makeComposer(api));
         const pills=h("div","pills");const g=h("span","pill guide");g.innerHTML='<span class="ico">'+SPK+'</span>Guide me';g.onclick=()=>{st.active=true;render();};pills.append(g);
-        EXAMPLES.forEach(l=>pills.append(h("span","pill",l)));mw.append(pills);
-      }else{ LAYOUTS[layout](mw,api,()=>{st.active=false;render();}); }
+        EX.forEach(x=>{const p=h("span","pill");p.innerHTML='<span class="ico">'+x.ic+'</span>'+x.label;pills.append(p);});
+        mw.append(pills);
+      }else{
+        const tray=h("div","composer");tray.style.marginTop="8px";
+        const oh=h("div","opt-tray-head");oh.append(h("span","optlabel","Optional"));oh.append(h("span",null,"Answer any — or skip"));const x=h("button","closex","✕");x.style.marginLeft="auto";x.onclick=()=>{st.active=false;render();};oh.append(x);tray.append(oh);
+        if(st.idx>=6){const d=h("div","gen-row");d.style.color="var(--teal)";d.innerHTML=CHECK+"<span style='margin-left:4px;color:var(--muted2)'>all questions answered</span>";tray.append(d);}
+        else if(st.loading){tray.append(genRow());}
+        else{const qh=h("div","qhead");qh.append(h("span","qcount","Question "+(st.idx+1)+" of 6"));const tag=h("span","qtag "+(st.idx>=3?"gen":"fixed"));if(st.idx>=3)tag.innerHTML=SPK+" generated";else tag.textContent="fixed";qh.append(tag);tray.append(qh);
+          tray.append(h("div","qtext",ALL[st.idx].q));tray.append(optionsEl(st.idx,v=>{st.ans[st.idx]=v;advance();}));
+          const sk=h("button","skiplink","Skip this question →");sk.onclick=()=>advance();tray.append(sk);}
+        mw.append(tray);
+        const prev=h("div","preview-card");prev.append(Object.assign(h("div","plabel"),{textContent:"Starts the run with"}));refs.preview=h("div","ptext");prev.append(refs.preview);mw.append(prev);
+      }
       w.append(mw);root.append(w);updateMeta();
     }
-    api.render=render;render();
+    render();
   }
-  const GUIDED=[
-    {layout:'trayBelow',name:'Tray below the box'},
-    {layout:'inlineBelow',name:'Inline below (no card)'},
-    {layout:'unifiedCard',name:'One unified card'},
-    {layout:'twoColumn',name:'Two columns · box + questions'},
-    {layout:'chips',name:'Answered questions as chips'},
-    {layout:'panel',name:'Bordered panel below'},
-    {layout:'compact',name:'Compact tray'},
-    {layout:'conversational',name:'Conversational bubbles'},
-    {layout:'stepper',name:'Progress-dots stepper'},
-    {layout:'overlay',name:'Elevated overlay card'},
-  ];
-  mountAll("guided","A",GUIDED,"Guide-me pill · optional · combines",(screen,cfg)=>guidedVariant(screen,cfg.layout));
 
-  // ---- fork/resume: corner "?" (B2), 10 tooltip variations ----
-  function tipCard(cfg){
-    const t=h("div","fptip "+(cfg.tipPos==='above'?"above":"below")+(cfg.accent?" accent":""));
-    if(cfg.style==='compact'){t.innerHTML="<b class='fork'>Fork</b> from a finished step · <b class='steer'>steer</b> the running one — earlier work kept.";return t;}
-    if(cfg.style==='tworow'){
-      const r1=h("div","trow fork");r1.append(h("span","k","Fork"));r1.append(h("span",null,"from a finished step → a new branched run"));
-      const r2=h("div","trow steer");r2.append(h("span","k","Steer"));r2.append(h("span",null,"the running step → continues this run"));
-      t.append(r1,r2);return t;
-    }
-    if(cfg.style!=='plain')t.append(Object.assign(h("div","th"),{textContent:"When you send"}));
-    t.append(Object.assign(h("p"),{innerHTML:"From a finished step this <b class='fork'>forks</b> a new run; from the running step it <b class='steer'>continues</b> (steers) this one. Earlier work is carried over either way.",style:"margin:0"}));
-    return t;
-  }
-  function forkVariant(root,cfg){
-    const scr=h("div");scr.append(Object.assign(h("div","runctx"),{textContent:"viewing a run · reply below"}));
-    const mw=h("div","maxw");mw.style.margin="0 auto";
+  // ---- Fork/resume: corner "?" clean ----
+  function forkMock(root){
+    const w=h("div");const mw=h("div","maxw");mw.style.margin="0 auto";
     const c=h("div","composer");
-    const qi=h("span","qi");
-    if(cfg.glyph==='i')qi.innerHTML=INFO;else if(cfg.glyph==='fork')qi.innerHTML=FORKG;else qi.innerHTML='<span class="g">?</span>';
-    if(cfg.dot){const d=h("span","dotm");d.style.background="var(--teal)";qi.append(d);}
+    const qi=h("span","qi");qi.innerHTML='<span class="g">?</span>';
     qi.onmouseenter=()=>c.classList.add("tipopen");qi.onmouseleave=()=>c.classList.remove("tipopen");qi.onclick=e=>{e.stopPropagation();c.classList.toggle("tipopen");};
     c.append(qi);
     c.append(Object.assign(h("div","ta ph"),{textContent:"Message this run…"}));
     const row=h("div","crow");const att=h("button","attach");att.innerHTML=PLUS;row.append(att);const sw=h("div","sendwrap");const s=h("button","send on");s.innerHTML=UP;sw.append(s);row.append(sw);c.append(row);
-    c.append(tipCard(cfg));
-    mw.append(c);scr.append(mw);
-    scr.append(Object.assign(h("div","runctx"),{textContent:"hover / tap the corner “?”"}));scr.lastChild.style.marginTop="9px";scr.lastChild.style.marginBottom="0";
-    root.append(scr);
+    const tip=h("div","fptip");tip.innerHTML="From a finished step this <b class='fork'>forks</b> a new run; from the running step it <b class='steer'>continues</b> (steers) this one.";
+    c.append(tip);
+    mw.append(c);w.append(mw);root.append(w);
   }
-  const FORKV=[
-    {glyph:'q',tipPos:'below',style:'full',name:'? · full explainer below'},
-    {glyph:'q',tipPos:'below',style:'plain',name:'? · sentence only (no title)'},
-    {glyph:'q',tipPos:'above',style:'full',name:'? · explainer above'},
-    {glyph:'i',tipPos:'below',style:'full',name:'(i) info glyph'},
-    {glyph:'q',tipPos:'below',style:'compact',name:'? · one-line compact'},
-    {glyph:'q',tipPos:'below',style:'tworow',name:'? · Fork / Steer two rows'},
-    {glyph:'fork',tipPos:'below',style:'full',name:'fork glyph in the corner'},
-    {glyph:'q',tipPos:'below',style:'full',accent:true,name:'? · teal-accented card'},
-    {glyph:'q',tipPos:'below',style:'full',dot:true,name:'? · with a mode dot'},
-    {glyph:'i',tipPos:'above',style:'compact',name:'(i) · compact, above'},
-  ];
-  mountAll("forkresume","B",FORKV,"real run composer · corner “?”",(screen,cfg)=>forkVariant(screen,cfg));
 
-  function mountAll(hostId,letter,list,tagText,run){
-    const host=document.getElementById(hostId);
-    list.forEach((cfg,i)=>{
-      const card=h("div","variant");const lab=h("div","vlabel");
-      lab.append(Object.assign(h("span","vnum"),{textContent:letter+(i+1)}));lab.append(Object.assign(h("span","vname"),{textContent:cfg.name}));
-      lab.append(Object.assign(h("span","tagreal"),{textContent:tagText}));card.append(lab);
-      const screen=h("div","screen");card.append(screen);run(screen,cfg);host.append(card);
-    });
+  function mock(hostId,num,name,tag,run){
+    const host=document.getElementById(hostId);const card=h("div","mock");
+    const lab=h("div","mlabel");lab.append(Object.assign(h("span","mnum"),{textContent:num}));lab.append(Object.assign(h("span","mname"),{textContent:name}));
+    lab.append(Object.assign(h("span","mtag"),{textContent:tag}));card.append(lab);
+    const screen=h("div","screen");card.append(screen);run(screen);host.append(card);
   }
+  mock("guide","①","Before — tap “Guide me”","real composer + pills",s=>guideFlow(s,false));
+  mock("guide","②","After — the optional questions","optional · typed+answers combine",s=>guideFlow(s,true));
+  mock("fork","","The run box with a corner “?”","hover / tap the “?”",s=>forkMock(s));
 })();
 </script>
 </body></html>
