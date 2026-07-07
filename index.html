@@ -7,45 +7,34 @@
 <title>Guided setup + fork/resume — variants in your real UI</title>
 <style>
   :root{
-    --bg:#fbfaf8; --panel:#fff; --composer:rgba(255,253,250,0.9);
+    --bg:#fbfaf8; --composer:rgba(255,253,250,0.9);
     --ink:#1a1a2e; --muted:#8a8a9a; --muted2:#6b7280; --faint:#9ca3af; --ph:#b0b0be;
     --line:rgba(0,0,0,.06); --line2:rgba(0,0,0,.08); --line-hover:rgba(0,0,0,.25);
     --sel-border:#1a1a2e; --sel-bg:rgba(26,26,46,.04); --send-inert:#e8e8ec;
     --indigo-50:#eef2ff; --indigo-100:#e0e7ff; --indigo-200:#c7d2fe; --indigo-500:#6366f1; --indigo-600:#4f46e5; --indigo-700:#4338ca;
     --teal:#0d9488; --blue:#3b82f6; --slate600:#475569; --slate700:#334155;
     --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    --serif:ui-serif,Georgia,"Times New Roman",serif;
-    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --serif:ui-serif,Georgia,"Times New Roman",serif; --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box} html,body{margin:0}
   body{background:#e9e7e2;color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.5}
   @media (prefers-color-scheme:dark){body{background:#0d0f13}}
-  :root[data-theme="light"] body{background:#e9e7e2} :root[data-theme="dark"] body{background:#0d0f13}
+  :root[data-theme="dark"] body{background:#0d0f13} :root[data-theme="light"] body{background:#e9e7e2}
   .wrap{max-width:760px;margin:0 auto;padding:26px 16px 120px}
   .lead .eyebrow{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;opacity:.6}
-  .lead h1{font-size:1.3rem;margin:.35rem 0 0;letter-spacing:-.01em;font-weight:640}
+  .lead h1{font-size:1.28rem;margin:.35rem 0 0;letter-spacing:-.01em;font-weight:640}
   .lead p{margin:.5rem 0 0;font-size:.88rem;opacity:.8;max-width:62ch}
-  .lead{color:#2a2a33}
+  .lead{color:#2a2a33} :root[data-theme="dark"] .lead{color:#eee}
   @media (prefers-color-scheme:dark){.lead{color:#eee}}
-  :root[data-theme="dark"] .lead{color:#eee} :root[data-theme="light"] .lead{color:#2a2a33}
-
   .section-tab{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:#2a2a33;opacity:.65;margin:38px 2px 4px;font-weight:600}
-  @media (prefers-color-scheme:dark){.section-tab{color:#ddd}}
-  :root[data-theme="dark"] .section-tab{color:#ddd}
+  :root[data-theme="dark"] .section-tab{color:#ddd} @media (prefers-color-scheme:dark){.section-tab{color:#ddd}}
   .variant{margin-top:22px}
   .vlabel{display:flex;align-items:baseline;gap:10px;margin:0 2px 7px;color:#2a2a33}
-  @media (prefers-color-scheme:dark){.vlabel,.vnote{color:#e6e6ea}}
-  :root[data-theme="dark"] .vlabel{color:#e6e6ea}
-  .vnum{font-family:var(--mono);font-size:.72rem;opacity:.6}
-  .vname{font-weight:600;font-size:.95rem}
+  :root[data-theme="dark"] .vlabel{color:#e6e6ea} @media (prefers-color-scheme:dark){.vlabel{color:#e6e6ea}}
+  .vnum{font-family:var(--mono);font-size:.72rem;opacity:.6} .vname{font-weight:600;font-size:.95rem}
   .tagreal{margin-left:auto;font-family:var(--mono);font-size:.58rem;letter-spacing:.05em;text-transform:uppercase;opacity:.6}
-  .vnote{font-size:.79rem;opacity:.72;margin:0 2px 9px;color:#33333d}
-  @media (prefers-color-scheme:dark){.vnote{color:#cfcfd6}}
-  :root[data-theme="dark"] .vnote{color:#cfcfd6}
-  .screen{background:var(--bg);border-radius:18px;padding:22px 16px 24px;box-shadow:0 10px 30px -16px rgba(0,0,0,.5);overflow:visible}
-  .screen.tall{padding-top:28px}
+  .screen{background:var(--bg);border-radius:18px;padding:24px 16px 24px;box-shadow:0 10px 30px -16px rgba(0,0,0,.5);overflow:visible}
 
-  /* welcome + composer (real) */
   .welcome{display:flex;flex-direction:column;align-items:center}
   .greet{font-family:var(--serif);font-size:1.9rem;line-height:1.1;letter-spacing:-.01em;color:var(--ink);text-align:center}
   .subtitle{margin:.55rem 0 1.2rem;font-size:.84rem;color:var(--muted);text-align:center}
@@ -53,20 +42,21 @@
   .composer{position:relative;display:flex;flex-direction:column;gap:12px;border-radius:24px;border:1px solid var(--line);
     background:var(--composer);box-shadow:0 2px 8px rgba(0,0,0,.04);padding:15px 14px 11px}
   .ta{min-height:22px;font-size:.9rem;color:var(--ink)} .ta.ph{color:var(--ph)}
+  .ta-real{width:100%;border:0;background:transparent;outline:none;resize:none;font:inherit;font-size:.9rem;color:var(--ink);min-height:22px;line-height:1.5}
+  .ta-real::placeholder{color:var(--ph)}
   .crow{display:flex;align-items:center;justify-content:space-between}
   .attach{width:32px;height:32px;display:grid;place-items:center;color:#7a7a88;border:0;background:transparent;cursor:pointer;border-radius:8px}
   .attach:hover{color:var(--ink)}
   .sendwrap{display:flex;align-items:center;gap:8px}
   .send{width:36px;height:36px;border-radius:999px;display:grid;place-items:center;border:0;cursor:pointer}
-  .send.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
-  .send.off{background:var(--send-inert);color:var(--ph)}
+  .send.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)} .send.off{background:var(--send-inert);color:var(--ph)}
   .pills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:15px}
-  .pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:8px 15px;font-size:12.5px;border:1px solid var(--line2);background:#fff;color:#4a4a5a;cursor:pointer}
+  .pill{display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:8px 14px;font-size:12.5px;border:1px solid var(--line2);background:#fff;color:#4a4a5a;cursor:pointer;white-space:nowrap}
   .pill:hover{border-color:var(--line-hover);background:rgba(0,0,0,.02)}
   .pill.guide{border-color:var(--indigo-200);background:var(--indigo-50);color:var(--indigo-700);font-weight:500}
+  .pill.guide:hover{border-color:#a5b4fc;background:var(--indigo-100)}
   .pill .ico{width:14px;height:14px;color:#64748b} .pill.guide .ico{color:var(--indigo-600)}
 
-  /* question header + ReviewTypeList choices */
   .qhead{display:flex;align-items:center;gap:8px;margin-bottom:9px}
   .qcount{font-size:12px;color:var(--muted)}
   .qtag{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:5px;padding:2px 6px}
@@ -75,117 +65,78 @@
   .qtext{font-size:14.5px;font-weight:560;line-height:1.3;color:var(--ink);margin-bottom:10px}
   .dots{display:flex;gap:5px;align-items:center;margin-left:auto}
   .dot{width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,.14)}
-  .dot.on{background:var(--ink)} .dot.cur{background:var(--ink);transform:scale(1.5)} .dot.gen.on{background:var(--indigo-500)}
+  .dot.on{background:var(--ink)} .dot.cur{transform:scale(1.5)} .dot.gen.on{background:var(--indigo-500)}
   .choices{display:flex;flex-direction:column;gap:7px}
-  .choices.grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-  .choices.compact{gap:5px}
   .choice{display:flex;align-items:center;gap:8px;width:100%;text-align:left;cursor:pointer;border-radius:8px;
     border:1px solid rgba(0,0,0,.05);background:#fff;color:var(--slate700);padding:9px 11px;font-size:13px;
     transition:border-color .12s,background .12s;font-family:inherit}
-  .choices.compact .choice{padding:7px 10px}
+  .compact .choice{padding:7px 10px}
   .choice:hover{border-color:var(--line-hover)}
   .choice.sel{border-color:var(--sel-border);background:var(--sel-bg);color:var(--ink);font-weight:500}
   .choice .chk{margin-left:auto;color:var(--ink);opacity:0;transition:opacity .12s} .choice.sel .chk{opacity:1}
-  .choice .kbnum{font-family:var(--mono);font-size:10px;color:var(--faint);border:1px solid var(--line2);border-radius:4px;padding:0 5px;min-width:16px;text-align:center}
   .choice.typ .pen{color:var(--faint)} .choice.typ.sel .pen{color:var(--ink)}
   .choice.typ input{flex:1;border:0;background:transparent;outline:none;font:inherit;font-size:13px;color:var(--ink);min-width:0}
   .choice.typ input::placeholder{color:var(--ph)}
-  /* pill-style options */
-  .pillopts{display:flex;flex-wrap:wrap;gap:7px}
-  .popt{border-radius:999px;border:1px solid var(--line2);background:#fff;color:var(--slate600);font:inherit;font-size:12.5px;padding:7px 13px;cursor:pointer;transition:.12s}
-  .popt:hover{border-color:var(--line-hover)} .popt.sel{border-color:var(--ink);background:var(--ink);color:#fff}
-  .popt.typ{display:inline-flex;align-items:center;gap:6px;color:var(--muted2)}
-  .popt.typ input{border:0;background:transparent;outline:none;font:inherit;font-size:12.5px;width:120px;color:var(--ink)}
-  .popt.typ input::placeholder{color:var(--ph)}
-
-  .gen-row{display:flex;align-items:center;gap:9px;color:var(--indigo-600);font-size:13px;padding:3px 0}
-  .spark{width:15px;height:15px;animation:pulse 1.3s ease-in-out infinite}
-  @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
-  .shim{height:36px;border-radius:8px;margin-top:7px;background:linear-gradient(100deg,rgba(0,0,0,.04) 30%,var(--indigo-50) 50%,rgba(0,0,0,.04) 70%);background-size:220% 100%;animation:sweep 1.25s ease-in-out infinite}
-  .shim.b{width:80%}
-  @keyframes sweep{to{background-position:-220% 0}}
-  @media (prefers-reduced-motion:reduce){.shim,.spark{animation:none}}
-  .composed p{margin:0;font-size:13px;line-height:1.5;color:var(--ink)}
-  .composed .lbl{font-size:11px;font-weight:600;color:var(--teal);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;display:flex;gap:6px;align-items:center}
-  .cap{font-size:11px;color:var(--faint);text-align:center;margin-top:11px;font-family:var(--mono)}
-  .back{border:0;background:transparent;color:var(--faint);cursor:pointer;font:inherit;font-size:12px;display:inline-flex;gap:4px;align-items:center;padding:0}
-  .back:hover{color:var(--muted2)}
-
-  /* chat placement */
-  .chat{display:flex;flex-direction:column;gap:9px}
-  .abub{align-self:flex-start;max-width:88%;background:rgba(0,0,0,.04);border-radius:13px;border-bottom-left-radius:4px;padding:9px 12px;font-size:13px;color:#3a3a4a}
-  .abub.gen{background:var(--indigo-50)}
-
-  /* ===== fork/resume: little "?" icon in the box ===== */
-  .qi{width:18px;height:18px;border-radius:999px;border:1px solid var(--line2);color:var(--muted);
-    display:grid;place-items:center;cursor:help;flex:none;position:relative;background:#fff}
-  .qi:hover{border-color:var(--indigo-500);color:var(--indigo-600)}
-  .qi svg{width:11px;height:11px} .qi .qtext-glyph{font-size:11px;font-weight:700;line-height:1}
-  .qi.corner{position:absolute;top:11px;right:13px}
-  .qi .dotm{position:absolute;top:-2px;right:-2px;width:6px;height:6px;border-radius:50%;border:1.5px solid #fff}
-  /* hover/tap tooltip anchored to the box, hidden until the "?" is hovered */
-  .composer .fptip{position:absolute;left:12px;right:12px;z-index:40;text-align:left;
-    border-radius:12px;border:1px solid var(--line2);background:#fff;padding:11px 12px;
-    box-shadow:0 14px 34px -12px rgba(0,0,0,.45);font-size:12px;line-height:1.5;color:#374151;
-    opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .13s,transform .13s;pointer-events:none}
-  .composer .fptip.below{top:calc(100% + 8px)}
-  .composer .fptip.above{bottom:calc(100% + 8px);transform:translateY(-4px)}
-  .composer.tipopen .fptip{opacity:1;visibility:visible;transform:none;pointer-events:auto}
-  .fptip .th{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted2);margin-bottom:6px}
-  .fptip b.fork{color:var(--teal)} .fptip b.steer{color:var(--blue)}
-  .runctx{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:9px}
-
-  /* optional affordances */
-  .optchip{font-size:9.5px;font-family:var(--mono);letter-spacing:.03em;text-transform:uppercase;background:rgba(0,0,0,.05);color:var(--muted2);border-radius:999px;padding:2px 6px;margin-left:5px}
-  .pill.guide .optchip{background:var(--indigo-100);color:var(--indigo-700)}
-  .optentry-hint{font-size:12.5px;color:var(--muted2);text-align:center;margin-top:13px;line-height:1.5}
-  .optentry-hint b{color:var(--indigo-700);font-weight:600}
-  .opt-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-  .opt-title{font-size:13px;font-weight:600;color:#4a4a5a;display:inline-flex;align-items:center}
-  .escape{border:0;background:transparent;color:var(--muted);font:inherit;font-size:12px;cursor:pointer;padding:3px 7px;border-radius:7px}
-  .escape:hover{color:var(--ink);background:rgba(0,0,0,.05)}
   .skiplink{border:0;background:transparent;color:var(--faint);font:inherit;font-size:12px;cursor:pointer;padding:8px 2px 0;text-align:left}
   .skiplink:hover{color:var(--muted2)}
-  .ta-real{width:100%;border:0;background:transparent;outline:none;resize:none;font:inherit;font-size:.9rem;color:var(--ink);min-height:42px;line-height:1.5}
-  .ta-real::placeholder{color:var(--ph)}
+
   .opt-tray-head{display:flex;align-items:center;gap:9px;margin-bottom:11px;font-size:12px;color:var(--muted2)}
   .optlabel{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--indigo-50);color:var(--indigo-700);border-radius:999px;padding:3px 9px;flex:none}
+  .closex{margin-left:auto;border:0;background:transparent;color:var(--muted);font:inherit;font-size:13px;cursor:pointer;padding:2px 6px;border-radius:6px;line-height:1}
+  .closex:hover{color:var(--ink);background:rgba(0,0,0,.05)}
   .preview-card{margin-top:10px;background:rgba(0,0,0,.025);border:1px dashed var(--line2);border-radius:12px;padding:11px 12px}
   .plabel{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:6px}
   .ptext{font-size:12.5px;line-height:1.5;color:var(--ink);white-space:pre-wrap}
   .chiprow{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
   .achip{display:inline-flex;align-items:center;gap:7px;background:var(--sel-bg);border:1px solid rgba(26,26,46,.14);color:var(--ink);border-radius:999px;padding:5px 6px 5px 11px;font-size:12px}
-  .achx{cursor:pointer;color:var(--muted);font-weight:700;line-height:1;padding:0 2px}
-  .achx:hover{color:var(--ink)}
-  .addq{display:inline-flex;align-items:center;gap:7px;margin-top:11px;border:1px dashed var(--line2);background:transparent;color:var(--indigo-600);font:inherit;font-size:12.5px;border-radius:999px;padding:8px 14px;cursor:pointer}
-  .addq:hover{border-color:var(--indigo-200);background:var(--indigo-50)}
-  .addq svg{width:13px;height:13px}
+  .achx{cursor:pointer;color:var(--muted);font-weight:700;line-height:1;padding:0 2px} .achx:hover{color:var(--ink)}
   .hair{height:1px;background:var(--line);margin:12px 0}
-  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  @media (max-width:560px){.twocol{grid-template-columns:1fr}}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:10px} @media (max-width:560px){.twocol{grid-template-columns:1fr}}
+  .gpanel{margin-top:12px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+  .overlay{margin-top:10px;background:#fff;border:1px solid var(--line2);border-radius:14px;padding:15px;box-shadow:0 20px 45px -18px rgba(0,0,0,.45)}
+  .chat{display:flex;flex-direction:column;gap:9px}
+  .abub{align-self:flex-start;max-width:88%;background:rgba(0,0,0,.04);border-radius:13px;border-bottom-left-radius:4px;padding:9px 12px;font-size:13px;color:#3a3a4a}
+  .abub.gen{background:var(--indigo-50)}
+  .gen-row{display:flex;align-items:center;gap:9px;color:var(--indigo-600);font-size:13px;padding:3px 0}
+  .spark{width:15px;height:15px;animation:pulse 1.3s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+  .shim{height:36px;border-radius:8px;margin-top:7px;background:linear-gradient(100deg,rgba(0,0,0,.04) 30%,var(--indigo-50) 50%,rgba(0,0,0,.04) 70%);background-size:220% 100%;animation:sweep 1.25s ease-in-out infinite}
+  .shim.b{width:80%} @keyframes sweep{to{background-position:-220% 0}}
+  @media (prefers-reduced-motion:reduce){.shim,.spark{animation:none}}
+
+  /* fork/resume — corner "?" (B2) + hover/tap tooltip */
+  .runctx{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:9px}
+  .qi{width:19px;height:19px;border-radius:999px;border:1px solid var(--line2);color:var(--muted);display:grid;place-items:center;cursor:help;background:#fff;position:absolute;top:12px;right:13px;z-index:5}
+  .qi:hover{border-color:var(--indigo-500);color:var(--indigo-600)}
+  .qi svg{width:11px;height:11px} .qi .g{font-size:11px;font-weight:700;line-height:1}
+  .qi .dotm{position:absolute;top:-2px;right:-2px;width:6px;height:6px;border-radius:50%;border:1.5px solid #fff}
+  .composer .fptip{position:absolute;left:12px;right:12px;z-index:40;text-align:left;border-radius:12px;border:1px solid var(--line2);
+    background:#fff;padding:11px 12px;box-shadow:0 14px 34px -12px rgba(0,0,0,.45);font-size:12px;line-height:1.5;color:#374151;
+    opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .13s,transform .13s;pointer-events:none}
+  .composer .fptip.below{top:calc(100% + 8px)} .composer .fptip.above{bottom:calc(100% + 8px);transform:translateY(-4px)}
+  .composer .fptip.accent{border-top:2px solid var(--teal)}
+  .composer.tipopen .fptip{opacity:1;visibility:visible;transform:none;pointer-events:auto}
+  .fptip .th{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted2);margin-bottom:6px}
+  .fptip b.fork{color:var(--teal)} .fptip b.steer{color:var(--blue)}
+  .fptip .trow{display:flex;gap:8px;margin-bottom:6px} .fptip .trow:last-child{margin-bottom:0}
+  .fptip .trow .k{font-weight:700;flex:none;width:42px} .fptip .trow.fork .k{color:var(--teal)} .fptip .trow.steer .k{color:var(--blue)}
   .svg-ico{stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 </style>
 
 <div class="wrap">
   <div class="lead">
     <div class="eyebrow">AI Inventor · variants in your real UI</div>
-    <h1>Guided setup &amp; fork/resume — 10 variants each, on your real composer</h1>
-    <p>All reuse your actual ComposerBox + the ReviewTypeList “pick one” idiom. Questions are multiple-choice
-      (3 presets + a “type your answer” row — no separate “Other”). Fork/resume is now just a small <b>“?”</b>
-      inside the input box (no “this will steer …” text). Scroll; each is live.</p>
+    <h1>Guided questions (Guide-me pill) &amp; fork/resume (corner “?”) — 10 variants each</h1>
+    <p>Your chosen directions, on the real composer: “Guide me” is a pill in the examples row; the fork/resume “?”
+      sits in the top-right corner (B2) and reveals its explainer on hover/tap. Optional throughout — typing and
+      answering combine. Scroll; each is live.</p>
   </div>
 
-  <div class="section-tab">★ Optional questions + your own prompt — 5 ways (typed + answers combine)</div>
-  <div id="featured"></div>
-
-  <div class="section-tab">A · Guided questions in the composer — 10 variants</div>
+  <div class="section-tab">A · Guided flow (opens from the Guide me pill) — 10 variants</div>
   <div id="guided"></div>
 
-  <div class="section-tab">B · Fork vs resume — a small “?” in the input box — 10 variants</div>
+  <div class="section-tab">B · Fork vs resume — corner “?” tooltip — 10 variants</div>
   <div id="forkresume"></div>
-
-  <div class="section-tab">C · Making it clear the questions are optional</div>
-  <div id="optional"></div>
 </div>
 
 <script>
@@ -200,7 +151,7 @@
   const PLUS=S('<path d="M12 5v14M5 12h14"/>',18);
   const UP=`<svg class="svg-ico" viewBox="0 0 24 24" style="width:16px;height:16px;stroke-width:2.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg>`;
   const INFO=S('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',12);
-  const FORK=S('<circle cx="12" cy="18" r="2.4"/><circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="6" r="2.4"/><path d="M18 8.4v1A2.6 2.6 0 0 1 15.4 12H8.6A2.6 2.6 0 0 1 6 9.4v-1"/><path d="M12 12v3.6"/>',12);
+  const FORKG=S('<circle cx="12" cy="18" r="2.4"/><circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="6" r="2.4"/><path d="M18 8.4v1A2.6 2.6 0 0 1 15.4 12H8.6A2.6 2.6 0 0 1 6 9.4v-1"/><path d="M12 12v3.6"/>',12);
 
   const FIXED=[
     {q:"What should this run explore?",opts:["LLM multi-agent systems","Mechanistic interpretability","Long-context retrieval methods"]},
@@ -213,137 +164,10 @@
     {q:"What baseline should it beat?",opts:["A single strong model","A fixed hierarchical controller","Round-robin role assignment"]},
   ];
   const ALL=FIXED.concat(AI);
+  // examples with the "LLM multiagents" pill removed
+  const EXAMPLES=["Relational deep learning","Linguistics","Political economy","LLM evaluation"];
   const lc=s=>s?s.charAt(0).toLowerCase()+s.slice(1):"…";
   const compose=a=>`Explore ${a[0]||"…"}, aiming to ${lc(a[1])}. Constraint: ${a[2]||"…"}. Focus on ${lc(a[3])}, measured by ${lc(a[4])}, versus ${lc(a[5])}.`;
-
-  // ---- option renderers (all reuse the app's real idioms) ----
-  function typeChoiceListRow(onPick,clearSel){
-    const t=h("div","choice typ");
-    const pen=h("span","pen");pen.innerHTML=PEN;t.append(pen);
-    const inp=document.createElement("input");inp.type="text";inp.placeholder="Type your answer…";t.append(inp);
-    const chk=h("span","chk");chk.innerHTML=CHECK;t.append(chk);
-    const commit=()=>{const v=inp.value.trim();if(v){t.classList.add("sel");setTimeout(()=>onPick(v),200);}};
-    inp.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();commit();}};
-    t.onclick=e=>{if(e.target!==inp)inp.focus();};
-    inp.oninput=clearSel;
-    return t;
-  }
-  function optionsEl(qi,style,onPick){
-    const qo=ALL[qi];
-    if(style==='pill'){
-      const box=h("div","pillopts");let sel=null;
-      qo.opts.forEach(opt=>{const b=h("button","popt");b.type="button";b.textContent=opt;
-        b.onclick=()=>{if(sel)sel.classList.remove("sel");b.classList.add("sel");sel=b;setTimeout(()=>onPick(opt),220);};box.append(b);});
-      const tp=h("div","popt typ");const inp=document.createElement("input");inp.placeholder="type your own…";
-      inp.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();const v=inp.value.trim();if(v)onPick(v);}};
-      tp.append(document.createTextNode(""));tp.append(inp);tp.onclick=e=>{if(e.target!==inp)inp.focus();};box.append(tp);
-      return box;
-    }
-    const box=h("div","choices"+(style==='grid'?" grid":"")+(style==='compact'?" compact":""));
-    let sel=null;
-    qo.opts.forEach((opt,i)=>{
-      const b=h("button","choice");b.type="button";
-      if(style==='numbered'){const n=h("span","kbnum",String(i+1));b.append(n);}
-      b.append(h("span",null,opt));
-      const chk=h("span","chk");chk.innerHTML=CHECK;b.append(chk);
-      b.onclick=()=>{if(sel)sel.classList.remove("sel");b.classList.add("sel");sel=b;setTimeout(()=>onPick(opt),240);};
-      box.append(b);
-    });
-    box.append(typeChoiceListRow(onPick,()=>{if(sel){sel.classList.remove("sel");sel=null;}}));
-    return box;
-  }
-  function headEl(qi,header){
-    const isAi=qi>=3;
-    const hd=h("div","qhead");
-    hd.append(h("span","qcount",`Question ${qi+1} of 6`));
-    const tag=h("span","qtag "+(isAi?"gen":"fixed"));
-    if(isAi)tag.innerHTML=SPK+" generated";else tag.textContent="fixed";
-    hd.append(tag);
-    if(header==='dots'){const d=h("div","dots");for(let i=0;i<6;i++){const dot=h("span","dot"+(i>=3?" gen":"")+(i<qi?" on":"")+(i===qi?" cur on":""));d.append(dot);}hd.append(d);}
-    return hd;
-  }
-  function genRow(){const w=h("div");const r=h("div","gen-row");r.innerHTML=SPARK+"<span>Generating 3 follow-ups…</span>";w.append(r,h("div","shim"),h("div","shim b"));return w;}
-  function composedEl(st,reset){const c=h("div","composed");const l=h("div","lbl");l.innerHTML=CHECK+"<span style='margin-left:2px'>prompt assembled</span>";c.append(l);c.append(h("p",null,compose(st.ans)));return c;}
-  function qBlock(st,cfg,api){const b=h("div");b.append(headEl(st.idx,cfg.header));b.append(h("div","qtext",ALL[st.idx].q));b.append(optionsEl(st.idx,cfg.optStyle,api.pick));return b;}
-
-  function composerShell(inner,{activeSend=false}={}){
-    const c=h("div","composer");c.append(inner);
-    const row=h("div","crow");const att=h("button","attach");att.innerHTML=PLUS;row.append(att);
-    const sw=h("div","sendwrap");const s=h("button","send "+(activeSend?"on":"off"));s.innerHTML=UP;sw.append(s);row.append(sw);c.append(row);
-    return c;
-  }
-
-  // ---- guided flow engine + parametric chrome ----
-  function guidedFlow(root,cfg){
-    const st={idx:0,ans:[],aiReady:false,loading:false};
-    const api={pick:v=>{st.ans[st.idx]=v;next();},reset:()=>{st.idx=0;st.ans=[];st.aiReady=false;st.loading=false;render();}};
-    function next(){if(st.idx===2&&!st.aiReady){st.idx=3;st.loading=true;render();setTimeout(()=>{st.loading=false;st.aiReady=true;render();},1050);return;}st.idx++;render();}
-    function render(){root.innerHTML="";chromes[cfg.placement](root,st,cfg,api);}
-    render();
-  }
-  const chromes={
-    takeover(root,st,cfg,api){
-      const w=h("div","welcome");w.append(Object.assign(h("div","greet"),{textContent:"Good afternoon"}));
-      w.append(Object.assign(h("div","subtitle"),{textContent:"Start a new invention by describing your research direction."}));
-      const mw=h("div","maxw");
-      let inner; if(st.idx>=6)inner=composedEl(st,api.reset); else if(st.loading)inner=genRow(); else inner=qBlock(st,cfg,api);
-      mw.append(composerShell(inner,{activeSend:st.idx>=6}));
-      mw.append(Object.assign(h("div","cap"),{textContent:st.idx>=6?"↑ sent to start the run, same as typing":"the composer becomes the question · pick one or type your own"}));
-      w.append(mw);root.append(w);
-    },
-    tray(root,st,cfg,api){
-      const w=h("div","welcome");w.append(Object.assign(h("div","greet"),{textContent:"Good afternoon"}));
-      w.append(Object.assign(h("div","subtitle"),{textContent:"Start a new invention by describing your research direction."}));
-      const mw=h("div","maxw");
-      mw.append(composerShell(h("div","ta ph",st.idx>=6?"Prompt ready ✓":"What would you like to invent?"),{activeSend:st.idx>=6}));
-      const tray=h("div","composer");tray.style.marginTop="8px";
-      if(st.idx>=6)tray.append(composedEl(st,api.reset)); else if(st.loading)tray.append(genRow()); else tray.append(qBlock(st,cfg,api));
-      mw.append(tray);w.append(mw);root.append(w);
-    },
-    pills(root,st,cfg,api){
-      const w=h("div","welcome");w.append(Object.assign(h("div","greet"),{textContent:"Good afternoon"}));
-      const mw=h("div","maxw");
-      mw.append(composerShell(st.idx>=6?composedEl(st,api.reset):h("div","ta ph","…or type it yourself"),{activeSend:st.idx>=6}));
-      if(st.loading){const g=h("div");g.style.marginTop="14px";g.append(genRow());mw.append(g);}
-      else if(st.idx<6){const s=h("div");s.style.marginTop="14px";s.append(headEl(st.idx,cfg.header));const qt=h("div","qtext",ALL[st.idx].q);qt.style.textAlign="center";s.append(qt);s.append(optionsEl(st.idx,cfg.optStyle,api.pick));mw.append(s);}
-      w.append(mw);root.append(w);
-    },
-    below(root,st,cfg,api){
-      const w=h("div","welcome");w.append(Object.assign(h("div","greet"),{textContent:"Good afternoon"}));
-      w.append(Object.assign(h("div","subtitle"),{textContent:"Type it yourself above, or pick below — your choice."}));
-      const mw=h("div","maxw");
-      mw.append(composerShell(h("div","ta ph","What would you like to invent?"),{}));
-      const s=h("div");s.style.marginTop="14px";
-      if(st.idx>=6)s.append(composedEl(st,api.reset)); else if(st.loading)s.append(genRow()); else s.append(qBlock(st,cfg,api));
-      mw.append(s);w.append(mw);root.append(w);
-    },
-    chat(root,st,cfg,api){
-      const w=h("div","welcome");w.append(Object.assign(h("div","greet"),{textContent:"Good afternoon"}));
-      const mw=h("div","maxw");const thread=h("div","chat");
-      for(let i=0;i<Math.min(st.idx,6);i++){const ab=h("div","abub"+(i>=3?" gen":""));ab.textContent=ALL[i].q;thread.append(ab);}
-      if(st.loading){const ab=h("div","abub gen");ab.innerHTML=SPK+" thinking up 3 follow-ups…";thread.append(ab);}
-      else if(st.idx<6){const ab=h("div","abub"+(st.idx>=3?" gen":""));ab.textContent=ALL[st.idx].q;thread.append(ab);const o=optionsEl(st.idx,cfg.optStyle,api.pick);thread.append(o);}
-      mw.append(thread);
-      if(st.idx>=6){const c=h("div");c.style.marginTop="10px";c.append(composedEl(st,api.reset));mw.append(c);}
-      w.append(mw);root.append(w);
-    },
-  };
-
-  const GUIDED=[
-    {placement:'takeover',optStyle:'list',header:'tag',name:'In-composer · list'},
-    {placement:'tray',optStyle:'list',header:'tag',name:'Tray under the box'},
-    {placement:'pills',optStyle:'list',header:'tag',name:'Choices in the pills slot'},
-    {placement:'below',optStyle:'list',header:'tag',name:'Box stays, choices below'},
-    {placement:'takeover',optStyle:'grid',header:'tag',name:'In-composer · 2-column grid'},
-    {placement:'takeover',optStyle:'pill',header:'tag',name:'In-composer · pill options'},
-    {placement:'takeover',optStyle:'numbered',header:'tag',name:'In-composer · numbered'},
-    {placement:'takeover',optStyle:'list',header:'dots',name:'In-composer · progress dots'},
-    {placement:'chat',optStyle:'list',header:'tag',name:'Conversational'},
-    {placement:'tray',optStyle:'list',header:'tag',name:'Tray · one option per row'},
-  ];
-  mountAll("guided","A",GUIDED,"real composer + ReviewTypeList",(screen,cfg)=>guidedFlow(screen,cfg));
-
-  // ===== ★ recommended: optional questions + free-text, combined =====
   function buildPrompt(typed,answers){
     const answered=answers.map((a,i)=>a?{q:ALL[i].q,a}:null).filter(Boolean);
     const t=(typed||"").trim();
@@ -353,146 +177,133 @@
     const bullets=answered.map(x=>"• "+x.a).join("\n");
     return t?(t+"\n\nGuided details:\n"+bullets):("Guided setup:\n"+bullets);
   }
-  // shared pieces (real editable composer + optional questions + preview)
+
+  function typeChoice(onPick,clearSel){
+    const t=h("div","choice typ");const pen=h("span","pen");pen.innerHTML=PEN;t.append(pen);
+    const inp=document.createElement("input");inp.type="text";inp.placeholder="Type your answer…";t.append(inp);
+    const chk=h("span","chk");chk.innerHTML=CHECK;t.append(chk);
+    const commit=()=>{const v=inp.value.trim();if(v){t.classList.add("sel");setTimeout(()=>onPick(v),200);}};
+    inp.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();commit();}};t.onclick=e=>{if(e.target!==inp)inp.focus();};inp.oninput=clearSel;return t;
+  }
+  function optionsEl(qi,onPick){
+    const qo=ALL[qi];const box=h("div","choices");let sel=null;
+    qo.opts.forEach(opt=>{const b=h("button","choice");b.type="button";b.append(h("span",null,opt));const chk=h("span","chk");chk.innerHTML=CHECK;b.append(chk);
+      b.onclick=()=>{if(sel)sel.classList.remove("sel");b.classList.add("sel");sel=b;setTimeout(()=>onPick(opt),240);};box.append(b);});
+    box.append(typeChoice(onPick,()=>{if(sel){sel.classList.remove("sel");sel=null;}}));return box;
+  }
+  function genRow(){const w=h("div");const r=h("div","gen-row");r.innerHTML=SPARK+"<span>Generating 3 follow-ups…</span>";w.append(r,h("div","shim"),h("div","shim b"));return w;}
+
+  // ---- shared builders ----
   function welcomeWrap(sub){const w=h("div","welcome");w.append(Object.assign(h("div","greet"),{textContent:"Good afternoon"}));w.append(Object.assign(h("div","subtitle"),{textContent:sub}));return w;}
   function makeTextarea(api){const ta=document.createElement("textarea");ta.className="ta-real";ta.rows=2;ta.placeholder="What would you like to invent?";ta.value=api.st.typed;ta.oninput=e=>{api.st.typed=e.target.value;api.updateMeta();};return ta;}
   function makeControls(api){const row=h("div","crow");const att=h("button","attach");att.innerHTML=PLUS;row.append(att);const sw=h("div","sendwrap");const s=h("button","send off");s.innerHTML=UP;api.refs.send=s;sw.append(s);row.append(sw);return row;}
   function makeComposer(api){const c=h("div","composer");c.append(makeTextarea(api));c.append(makeControls(api));return c;}
-  function optHead(){const oh=h("div","opt-tray-head");oh.append(h("span","optlabel","Optional"));oh.append(h("span",null,"Answer any to guide the run — or skip them all"));return oh;}
-  function makeQuestion(api){const st=api.st;const wrap=h("div");
+  function trayHead(close,compact){const oh=h("div","opt-tray-head");oh.append(h("span","optlabel","Optional"));if(!compact)oh.append(h("span",null,"Answer any — or skip"));const x=h("button","closex","✕");x.style.marginLeft="auto";x.onclick=close;oh.append(x);return oh;}
+  function question(api){const st=api.st;const wrap=h("div");
     if(st.idx>=6){const d=h("div","gen-row");d.style.color="var(--teal)";d.innerHTML=CHECK+"<span style='margin-left:4px;color:var(--muted2)'>all questions answered</span>";wrap.append(d);return wrap;}
     if(st.loading){wrap.append(genRow());return wrap;}
     const qh=h("div","qhead");qh.append(h("span","qcount","Question "+(st.idx+1)+" of 6"));const tag=h("span","qtag "+(st.idx>=3?"gen":"fixed"));if(st.idx>=3)tag.innerHTML=SPK+" generated";else tag.textContent="fixed";qh.append(tag);wrap.append(qh);
-    wrap.append(h("div","qtext",ALL[st.idx].q));
-    wrap.append(optionsEl(st.idx,'list',v=>{st.ans[st.idx]=v;api.advance();}));
-    const sk=h("button","skiplink","Skip this question →");sk.onclick=()=>api.advance();wrap.append(sk);
-    return wrap;}
-  function makePreview(api){const prev=h("div","preview-card");prev.append(Object.assign(h("div","plabel"),{textContent:"Starts the run with"}));const p=h("div","ptext");api.refs.preview=p;prev.append(p);return prev;}
-  function optionalFlow(root,chrome){
-    const st={idx:0,ans:[],aiReady:false,loading:false,typed:"",expanded:false};
+    wrap.append(h("div","qtext",ALL[st.idx].q));wrap.append(optionsEl(st.idx,v=>{st.ans[st.idx]=v;api.advance();}));
+    const sk=h("button","skiplink","Skip this question →");sk.onclick=()=>api.advance();wrap.append(sk);return wrap;}
+  function preview(api){const prev=h("div","preview-card");prev.append(Object.assign(h("div","plabel"),{textContent:"Starts the run with"}));const p=h("div","ptext");api.refs.preview=p;prev.append(p);return prev;}
+
+  // ---- guided engine: pills entry → active flow in layout N ----
+  const LAYOUTS={
+    trayBelow(mw,api,close){mw.append(makeComposer(api));const tr=h("div","composer");tr.style.marginTop="8px";tr.append(trayHead(close));tr.append(question(api));mw.append(tr);mw.append(preview(api));},
+    inlineBelow(mw,api,close){mw.append(makeComposer(api));const s=h("div");s.style.marginTop="14px";s.append(trayHead(close));s.append(question(api));mw.append(s);mw.append(preview(api));},
+    unifiedCard(mw,api,close){const c=h("div","composer");c.append(makeTextarea(api));c.append(h("div","hair"));c.append(trayHead(close));c.append(question(api));c.append(h("div","hair"));c.append(preview(api));c.append(makeControls(api));mw.append(c);},
+    twoColumn(mw,api,close){const g=h("div","twocol");g.append(makeComposer(api));const r=h("div","composer");r.append(trayHead(close));r.append(question(api));g.append(r);mw.append(g);mw.append(preview(api));},
+    chips(mw,api,close){mw.append(makeComposer(api));const ans=api.st.ans.map((a,i)=>a?{i,a}:null).filter(Boolean);if(ans.length){const cr=h("div","chiprow");ans.forEach(x=>{const chip=h("span","achip");chip.append(document.createTextNode(x.a));const xx=h("span","achx","×");xx.onclick=()=>{api.st.ans[x.i]=undefined;api.render();};chip.append(xx);cr.append(chip);});mw.append(cr);}const tr=h("div","composer");tr.style.marginTop="8px";tr.append(trayHead(close));tr.append(question(api));mw.append(tr);mw.append(preview(api));},
+    panel(mw,api,close){mw.append(makeComposer(api));const p=h("div","gpanel");p.append(trayHead(close));p.append(question(api));p.append(preview(api));mw.append(p);},
+    compact(mw,api,close){mw.append(makeComposer(api));const tr=h("div","composer compact");tr.style.marginTop="8px";tr.style.padding="11px 12px";tr.append(trayHead(close,true));tr.append(question(api));mw.append(tr);mw.append(preview(api));},
+    conversational(mw,api,close){mw.append(makeComposer(api));const th=h("div","chat");th.style.marginTop="11px";const oh=trayHead(close);th.append(oh);const st=api.st;for(let i=0;i<Math.min(st.idx,6);i++){const ab=h("div","abub"+(i>=3?" gen":""));ab.textContent=ALL[i].q;th.append(ab);}if(st.loading){const ab=h("div","abub gen");ab.innerHTML=SPK+" thinking up 3 follow-ups…";th.append(ab);}else if(st.idx<6){const ab=h("div","abub"+(st.idx>=3?" gen":""));ab.textContent=ALL[st.idx].q;th.append(ab);th.append(optionsEl(st.idx,v=>{st.ans[st.idx]=v;api.advance();}));}mw.append(th);mw.append(preview(api));},
+    stepper(mw,api,close){mw.append(makeComposer(api));const tr=h("div","composer");tr.style.marginTop="8px";const hd=h("div","opt-tray-head");hd.append(h("span","optlabel","Optional"));const dots=h("div","dots");for(let i=0;i<6;i++){const d=h("span","dot"+(i>=3?" gen":"")+(i<api.st.idx?" on":"")+(i===api.st.idx?" cur on":""));dots.append(d);}hd.append(dots);const x=h("button","closex","✕");x.onclick=close;hd.append(x);tr.append(hd);tr.append(question(api));mw.append(tr);mw.append(preview(api));},
+    overlay(mw,api,close){mw.append(makeComposer(api));const ov=h("div","overlay");ov.append(trayHead(close));ov.append(question(api));ov.append(preview(api));mw.append(ov);},
+  };
+  function guidedVariant(root,layout){
+    const st={typed:"",active:false,idx:0,ans:[],aiReady:false,loading:false};
     const refs={preview:null,send:null};
     const anyInput=()=>st.typed.trim()!==""||st.ans.some(Boolean);
     function updateMeta(){if(refs.preview)refs.preview.textContent=buildPrompt(st.typed,st.ans);if(refs.send)refs.send.className="send "+(anyInput()?"on":"off");}
     function advance(){if(st.idx===2&&!st.aiReady){st.idx=3;st.loading=true;render();setTimeout(()=>{st.loading=false;st.aiReady=true;render();},1000);return;}st.idx++;render();}
-    const api={st,refs,anyInput,updateMeta,advance};
-    function render(){refs.preview=null;refs.send=null;root.innerHTML="";chrome(root,api);updateMeta();}
+    const api={st,refs,anyInput,updateMeta,advance,render:null};
+    function render(){
+      refs.preview=null;refs.send=null;root.innerHTML="";
+      const w=welcomeWrap(st.active?"Answer any — or type above. Both combine into the run.":"Start a new invention by describing your research direction.");
+      const mw=h("div","maxw");if(layout==='twoColumn')mw.style.maxWidth="640px";
+      if(!st.active){
+        mw.append(makeComposer(api));
+        const pills=h("div","pills");const g=h("span","pill guide");g.innerHTML='<span class="ico">'+SPK+'</span>Guide me';g.onclick=()=>{st.active=true;render();};pills.append(g);
+        EXAMPLES.forEach(l=>pills.append(h("span","pill",l)));mw.append(pills);
+      }else{ LAYOUTS[layout](mw,api,()=>{st.active=false;render();}); }
+      w.append(mw);root.append(w);updateMeta();
+    }
     api.render=render;render();
   }
-  const optChromes={
-    tray(root,api){const w=welcomeWrap("Describe your run — and/or answer a few optional questions.");const mw=h("div","maxw");mw.append(makeComposer(api));const tray=h("div","composer");tray.style.marginTop="8px";tray.append(optHead());tray.append(makeQuestion(api));mw.append(tray);mw.append(makePreview(api));w.append(mw);root.append(w);},
-    collapsible(root,api){const w=welcomeWrap("Describe your run.");const mw=h("div","maxw");mw.append(makeComposer(api));
-      if(!api.st.expanded){const add=h("button","addq");add.innerHTML=SPK+" Answer a few optional questions to guide it";add.onclick=()=>{api.st.expanded=true;api.render();};mw.append(add);}
-      else{const tray=h("div","composer");tray.style.marginTop="8px";tray.append(optHead());tray.append(makeQuestion(api));mw.append(tray);mw.append(makePreview(api));}
-      w.append(mw);root.append(w);},
-    unified(root,api){const w=welcomeWrap("Describe your run — and/or answer a few optional questions.");const mw=h("div","maxw");
-      const card=h("div","composer");card.append(makeTextarea(api));card.append(h("div","hair"));card.append(optHead());card.append(makeQuestion(api));card.append(h("div","hair"));card.append(makePreview(api));card.append(makeControls(api));mw.append(card);w.append(mw);root.append(w);},
-    twoCol(root,api){const w=welcomeWrap("Type on the left, answer optional questions on the right — either or both.");const mw=h("div","maxw");mw.style.maxWidth="640px";
-      const grid=h("div","twocol");grid.append(makeComposer(api));const right=h("div","composer");right.append(optHead());right.append(makeQuestion(api));grid.append(right);mw.append(grid);mw.append(makePreview(api));w.append(mw);root.append(w);},
-    chips(root,api){const st=api.st;const w=welcomeWrap("Describe your run — answered questions attach as chips below.");const mw=h("div","maxw");mw.append(makeComposer(api));
-      const answered=st.ans.map((a,i)=>a?{i,a}:null).filter(Boolean);
-      if(answered.length){const cr=h("div","chiprow");answered.forEach(x=>{const chip=h("span","achip");chip.append(document.createTextNode(x.a));const xx=h("span","achx","×");xx.onclick=()=>{st.ans[x.i]=undefined;api.render();};chip.append(xx);cr.append(chip);});mw.append(cr);}
-      const tray=h("div","composer");tray.style.marginTop="8px";tray.append(optHead());tray.append(makeQuestion(api));mw.append(tray);mw.append(makePreview(api));
-      w.append(mw);root.append(w);},
-  };
-  const OPT5=[
-    {name:"Optional tray below the box",chrome:optChromes.tray},
-    {name:"Collapsible “add optional questions”",chrome:optChromes.collapsible},
-    {name:"One unified card",chrome:optChromes.unified},
-    {name:"Two columns · box + questions",chrome:optChromes.twoCol},
-    {name:"Answered questions as chips",chrome:optChromes.chips},
+  const GUIDED=[
+    {layout:'trayBelow',name:'Tray below the box'},
+    {layout:'inlineBelow',name:'Inline below (no card)'},
+    {layout:'unifiedCard',name:'One unified card'},
+    {layout:'twoColumn',name:'Two columns · box + questions'},
+    {layout:'chips',name:'Answered questions as chips'},
+    {layout:'panel',name:'Bordered panel below'},
+    {layout:'compact',name:'Compact tray'},
+    {layout:'conversational',name:'Conversational bubbles'},
+    {layout:'stepper',name:'Progress-dots stepper'},
+    {layout:'overlay',name:'Elevated overlay card'},
   ];
-  (function(){const fh=document.getElementById("featured");OPT5.forEach((v,i)=>{const card=h("div","variant");const lab=h("div","vlabel");lab.append(Object.assign(h("span","vnum"),{textContent:"★"+(i+1)}));lab.append(Object.assign(h("span","vname"),{textContent:v.name}));lab.append(Object.assign(h("span","tagreal"),{textContent:"optional · typed+answers combine"}));card.append(lab);const screen=h("div","screen tall");card.append(screen);optionalFlow(screen,v.chrome);fh.append(card);});})();
+  mountAll("guided","A",GUIDED,"Guide-me pill · optional · combines",(screen,cfg)=>guidedVariant(screen,cfg.layout));
 
-  // ===== fork/resume: little "?" icon in the input box =====
-  const FPTITLE="When you send";
-  function tipCard(pos){
-    const t=h("div","fptip "+(pos==='above'?"above":"below"));
-    t.append(Object.assign(h("div","th"),{textContent:FPTITLE}));
-    t.append(Object.assign(h("p",null),{innerHTML:"From a finished step this <b class='fork'>forks</b> a new run branched there; from the running step it <b class='steer'>continues</b> (steers) this one. Earlier work is carried over either way.",style:"margin:0"}));
+  // ---- fork/resume: corner "?" (B2), 10 tooltip variations ----
+  function tipCard(cfg){
+    const t=h("div","fptip "+(cfg.tipPos==='above'?"above":"below")+(cfg.accent?" accent":""));
+    if(cfg.style==='compact'){t.innerHTML="<b class='fork'>Fork</b> from a finished step · <b class='steer'>steer</b> the running one — earlier work kept.";return t;}
+    if(cfg.style==='tworow'){
+      const r1=h("div","trow fork");r1.append(h("span","k","Fork"));r1.append(h("span",null,"from a finished step → a new branched run"));
+      const r2=h("div","trow steer");r2.append(h("span","k","Steer"));r2.append(h("span",null,"the running step → continues this run"));
+      t.append(r1,r2);return t;
+    }
+    if(cfg.style!=='plain')t.append(Object.assign(h("div","th"),{textContent:"When you send"}));
+    t.append(Object.assign(h("p"),{innerHTML:"From a finished step this <b class='fork'>forks</b> a new run; from the running step it <b class='steer'>continues</b> (steers) this one. Earlier work is carried over either way.",style:"margin:0"}));
     return t;
-  }
-  function makeQi(cfg){
-    const qi=h("span","qi"+(cfg.pos==='corner'?" corner":""));
-    if(cfg.glyph==='i')qi.innerHTML=INFO; else if(cfg.glyph==='fork')qi.innerHTML=FORK; else qi.innerHTML='<span class="qtext-glyph">?</span>';
-    if(cfg.dot){const d=h("span","dotm");d.style.background=cfg.dotColor||'var(--teal)';qi.append(d);}
-    return qi;
   }
   function forkVariant(root,cfg){
     const scr=h("div");scr.append(Object.assign(h("div","runctx"),{textContent:"viewing a run · reply below"}));
     const mw=h("div","maxw");mw.style.margin="0 auto";
-    const c=h("div","composer");c.style.position="relative";
-    const qi=makeQi(cfg);
-    // hover (desktop) / tap (touch) the "?" to reveal the tooltip
-    qi.onmouseenter=()=>c.classList.add("tipopen");
-    qi.onmouseleave=()=>c.classList.remove("tipopen");
-    qi.onclick=(e)=>{e.stopPropagation();c.classList.toggle("tipopen");};
-    const ta=h("div","ta ph");
-    ta.style.display="flex";ta.style.alignItems="center";ta.style.gap="7px";
-    ta.append(document.createTextNode("Message this run…"));
-    if(cfg.pos==='inline')ta.append(qi);
-    c.append(ta);
-    if(cfg.pos==='corner')c.append(qi);
-    const row=h("div","crow");
-    const attWrap=h("div");attWrap.style.display="flex";attWrap.style.alignItems="center";attWrap.style.gap="8px";
-    const att=h("button","attach");att.innerHTML=PLUS;attWrap.append(att);
-    if(cfg.pos==='attach-right')attWrap.append(qi);
-    row.append(attWrap);
-    const sw=h("div","sendwrap");
-    if(cfg.pos==='send-left'||cfg.pos==='controls')sw.append(qi);
-    const s=h("button","send on");s.innerHTML=UP;sw.append(s);row.append(sw);
-    c.append(row);
-    c.append(tipCard(cfg.tipPos));   // the tooltip: hidden until the "?" is hovered/tapped
+    const c=h("div","composer");
+    const qi=h("span","qi");
+    if(cfg.glyph==='i')qi.innerHTML=INFO;else if(cfg.glyph==='fork')qi.innerHTML=FORKG;else qi.innerHTML='<span class="g">?</span>';
+    if(cfg.dot){const d=h("span","dotm");d.style.background="var(--teal)";qi.append(d);}
+    qi.onmouseenter=()=>c.classList.add("tipopen");qi.onmouseleave=()=>c.classList.remove("tipopen");qi.onclick=e=>{e.stopPropagation();c.classList.toggle("tipopen");};
+    c.append(qi);
+    c.append(Object.assign(h("div","ta ph"),{textContent:"Message this run…"}));
+    const row=h("div","crow");const att=h("button","attach");att.innerHTML=PLUS;row.append(att);const sw=h("div","sendwrap");const s=h("button","send on");s.innerHTML=UP;sw.append(s);row.append(sw);c.append(row);
+    c.append(tipCard(cfg));
     mw.append(c);scr.append(mw);
-    scr.append(Object.assign(h("div","cap"),{textContent:"hover (or tap) the “?” — the explainer appears only then"}));
+    scr.append(Object.assign(h("div","runctx"),{textContent:"hover / tap the corner “?”"}));scr.lastChild.style.marginTop="9px";scr.lastChild.style.marginBottom="0";
     root.append(scr);
   }
   const FORKV=[
-    {pos:'send-left',glyph:'q',tipPos:'above',name:'“?” left of the send button'},
-    {pos:'corner',glyph:'q',tipPos:'below',name:'“?” in the top-right corner'},
-    {pos:'inline',glyph:'q',tipPos:'above',name:'“?” right after the placeholder'},
-    {pos:'send-left',glyph:'i',tipPos:'above',name:'“(i)” info icon by send'},
-    {pos:'attach-right',glyph:'q',tipPos:'above',name:'“?” next to the + button'},
-    {pos:'send-left',glyph:'q',tipPos:'above',dot:true,dotColor:'var(--teal)',name:'“?” with a fork/steer mode dot'},
-    {pos:'corner',glyph:'fork',tipPos:'below',name:'fork glyph in the corner'},
-    {pos:'send-left',glyph:'q',tipPos:'below',name:'“?” left of send · tip below'},
-    {pos:'controls',glyph:'q',tipPos:'above',name:'“?” in the controls row'},
-    {pos:'inline',glyph:'i',tipPos:'below',name:'“(i)” after placeholder · tip below'},
+    {glyph:'q',tipPos:'below',style:'full',name:'? · full explainer below'},
+    {glyph:'q',tipPos:'below',style:'plain',name:'? · sentence only (no title)'},
+    {glyph:'q',tipPos:'above',style:'full',name:'? · explainer above'},
+    {glyph:'i',tipPos:'below',style:'full',name:'(i) info glyph'},
+    {glyph:'q',tipPos:'below',style:'compact',name:'? · one-line compact'},
+    {glyph:'q',tipPos:'below',style:'tworow',name:'? · Fork / Steer two rows'},
+    {glyph:'fork',tipPos:'below',style:'full',name:'fork glyph in the corner'},
+    {glyph:'q',tipPos:'below',style:'full',accent:true,name:'? · teal-accented card'},
+    {glyph:'q',tipPos:'below',style:'full',dot:true,name:'? · with a mode dot'},
+    {glyph:'i',tipPos:'above',style:'compact',name:'(i) · compact, above'},
   ];
-  mountAll("forkresume","B",FORKV,"real composer · “?” in the box",(screen,cfg)=>forkVariant(screen,cfg));
-
-  // ===== C · optional =====
-  function optEntry(root){
-    const w=h("div","welcome");w.append(Object.assign(h("div","greet"),{textContent:"Good afternoon"}));
-    w.append(Object.assign(h("div","subtitle"),{textContent:"Start a new invention by describing your research direction."}));
-    const mw=h("div","maxw");mw.append(composerShell(h("div","ta ph","What would you like to invent?"),{}));
-    const hint=h("div","optentry-hint");hint.innerHTML="Prefer a few quick questions? Tap <b>Guide me</b> — it's optional; typing works exactly as before.";mw.append(hint);
-    const pills=h("div","pills");const g=h("span","pill guide");g.innerHTML='<span class="ico">'+SPK+'</span>Guide me<span class="optchip">optional</span>';pills.append(g);
-    ["Relational deep learning","LLM multiagents","LLM evaluation"].forEach(l=>pills.append(h("span","pill",l)));mw.append(pills);
-    w.append(mw);root.append(w);
-    root.append(Object.assign(h("div","cap"),{textContent:"the questions never appear unless you tap Guide me · the box is the default"}));
-  }
-  function optEscape(root){
-    const st={idx:0,escaped:false};
-    function render(){root.innerHTML="";const mw=h("div","maxw");mw.style.margin="0 auto";
-      if(st.escaped){mw.append(composerShell(h("div","ta ph","What would you like to invent?"),{}));const b=h("button","back");b.innerHTML=SPK+" back to guided questions";b.onclick=()=>{st.escaped=false;render();};const cap=h("div","cap");cap.append(b);mw.append(cap);root.append(mw);return;}
-      const c=h("div","composer");const head=h("div","opt-head");const t=h("div","opt-title");t.innerHTML='Guided setup<span class="optchip">optional</span>';
-      const esc=h("button","escape");esc.textContent="Write it myself ✕";esc.onclick=()=>{st.escaped=true;render();};head.append(t,esc);c.append(head);
-      c.append(headEl(st.idx,'tag'));c.append(h("div","qtext",ALL[st.idx].q));c.append(optionsEl(st.idx,'list',()=>{st.idx=(st.idx+1)%3;render();}));
-      const skip=h("button","skiplink","Skip this question →");skip.onclick=()=>{st.idx=(st.idx+1)%3;render();};c.append(skip);
-      mw.append(c);mw.append(Object.assign(h("div","cap"),{textContent:"a clear exit to plain typing, and every question is skippable"}));root.append(mw);}
-    render();
-  }
-  const OPT=[{name:"It's opt-in — the box is the default",mount:optEntry},{name:"Always an exit + every question skippable",mount:optEscape}];
-  mountAll("optional","C",OPT.map(o=>o),"real composer",(screen,cfg)=>cfg.mount(screen));
+  mountAll("forkresume","B",FORKV,"real run composer · corner “?”",(screen,cfg)=>forkVariant(screen,cfg));
 
   function mountAll(hostId,letter,list,tagText,run){
     const host=document.getElementById(hostId);
     list.forEach((cfg,i)=>{
-      const card=h("div","variant");
-      const lab=h("div","vlabel");lab.append(Object.assign(h("span","vnum"),{textContent:letter+(i+1)}));lab.append(Object.assign(h("span","vname"),{textContent:cfg.name}));
+      const card=h("div","variant");const lab=h("div","vlabel");
+      lab.append(Object.assign(h("span","vnum"),{textContent:letter+(i+1)}));lab.append(Object.assign(h("span","vname"),{textContent:cfg.name}));
       lab.append(Object.assign(h("span","tagreal"),{textContent:tagText}));card.append(lab);
-      const screen=h("div","screen tall");card.append(screen);
-      run(screen,cfg);host.append(card);
+      const screen=h("div","screen");card.append(screen);run(screen,cfg);host.append(card);
     });
   }
 })();
