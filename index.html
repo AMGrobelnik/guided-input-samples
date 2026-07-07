@@ -104,10 +104,11 @@
   <div class="lead">
     <div class="eyebrow">AI Inventor · final UI mocks</div>
     <h1>Guide me &amp; fork/resume — final mocks on the real composer</h1>
-    <p>Live. The Guide-me flow in its two states, and the fork/resume “?” in the corner.</p>
+    <p>Live. Two separate ways to start a run — type a prompt, or tap Guide me and answer questions instead
+      (no combining) — plus the fork/resume “?”.</p>
   </div>
 
-  <div class="section-tab">Guide me — the two states</div>
+  <div class="section-tab">Guide me — two separate ways to start</div>
   <div id="guide"></div>
 
   <div class="section-tab">Fork vs resume — the corner “?”</div>
@@ -171,38 +172,40 @@
   // ---- Guide me flow (two states) ----
   function guideFlow(root,startActive){
     const st={typed:"",active:!!startActive,idx:0,ans:[],aiReady:false,loading:false};
-    const refs={preview:null,send:null};
-    const anyInput=()=>st.typed.trim()!==""||st.ans.some(Boolean);
-    function updateMeta(){if(refs.preview)refs.preview.textContent=buildPrompt(st.typed,st.ans);if(refs.send)refs.send.className="send "+(anyInput()?"on":"off");}
+    const refs={send:null};
+    const guidedPrompt=()=>{const ans=st.ans.filter(Boolean);if(!ans.length)return "";if(ans.length===6)return compose(st.ans);return ans.map(a=>"• "+a).join("\n");};
+    function updateSend(){if(refs.send)refs.send.className="send "+((st.active?st.ans.some(Boolean):st.typed.trim()!=="")?"on":"off");}
     function advance(){if(st.idx===2&&!st.aiReady){st.idx=3;st.loading=true;render();setTimeout(()=>{st.loading=false;st.aiReady=true;render();},1000);return;}st.idx++;render();}
-    function composer(){
-      const c=h("div","composer");
-      const ta=document.createElement("textarea");ta.className="ta-real";ta.rows=2;ta.placeholder="What would you like to invent?";ta.value=st.typed;
-      ta.oninput=e=>{st.typed=e.target.value;updateMeta();};c.append(ta);
-      const row=h("div","crow");const att=h("button","attach");att.innerHTML=PLUS;row.append(att);
-      const sw=h("div","sendwrap");const s=h("button","send off");s.innerHTML=UP;refs.send=s;sw.append(s);row.append(sw);c.append(row);return c;
-    }
+    function controls(withAttach){const row=h("div","crow");if(withAttach){const att=h("button","attach");att.innerHTML=PLUS;row.append(att);}else row.append(h("div"));const sw=h("div","sendwrap");const s=h("button","send off");s.innerHTML=UP;refs.send=s;sw.append(s);row.append(sw);return row;}
     function render(){
-      refs.preview=null;refs.send=null;root.innerHTML="";
+      refs.send=null;root.innerHTML="";
       const w=h("div","welcome");w.append(Object.assign(h("div","greet"),{textContent:"Good afternoon"}));
-      w.append(Object.assign(h("div","subtitle"),{textContent:st.active?"Answer any — or type above. Both combine into the run.":"Start a new invention by describing your research direction."}));
-      const mw=h("div","maxw");mw.append(composer());
+      w.append(Object.assign(h("div","subtitle"),{textContent:st.active?"Answer a few questions to build your run — or close ✕ to type a prompt instead.":"Start a new invention by describing your research direction."}));
+      const mw=h("div","maxw");
       if(!st.active){
+        // one way — type a prompt
+        const c=h("div","composer");
+        const ta=document.createElement("textarea");ta.className="ta-real";ta.rows=2;ta.placeholder="What would you like to invent?";ta.value=st.typed;
+        ta.oninput=e=>{st.typed=e.target.value;updateSend();};c.append(ta);c.append(controls(true));mw.append(c);
         const pills=h("div","pills");const g=h("span","pill guide");g.innerHTML='<span class="ico">'+SPK+'</span>Guide me';g.onclick=()=>{st.active=true;render();};pills.append(g);
-        EX.forEach(x=>{const p=h("span","pill");p.innerHTML='<span class="ico">'+x.ic+'</span>'+x.label;pills.append(p);});
-        mw.append(pills);
+        EX.forEach(x=>{const p=h("span","pill");p.innerHTML='<span class="ico">'+x.ic+'</span>'+x.label;pills.append(p);});mw.append(pills);
       }else{
-        const tray=h("div","composer");tray.style.marginTop="8px";tray.style.position="relative";
-        const x=h("button","closex","✕");x.style.cssText="position:absolute;top:9px;right:11px;z-index:2";x.onclick=()=>{st.active=false;render();};tray.append(x);
-        if(st.idx>=6){const d=h("div","gen-row");d.style.color="var(--teal)";d.innerHTML=CHECK+"<span style='margin-left:4px;color:var(--muted2)'>all questions answered</span>";tray.append(d);}
-        else if(st.loading){tray.append(genRow());}
-        else{const qh=h("div","qhead");qh.append(h("span","qcount","Question "+(st.idx+1)+" of 6"));const tag=h("span","qtag "+(st.idx>=3?"gen":"fixed"));if(st.idx>=3)tag.innerHTML=SPK+" generated";else tag.textContent="fixed";qh.append(tag);tray.append(qh);
-          tray.append(h("div","qtext",ALL[st.idx].q));tray.append(optionsEl(st.idx,v=>{st.ans[st.idx]=v;advance();}));
-          const sk=h("button","skiplink","Skip this question →");sk.onclick=()=>advance();tray.append(sk);}
-        mw.append(tray);
-        const prev=h("div","preview-card");prev.append(Object.assign(h("div","plabel"),{textContent:"Starts the run with"}));refs.preview=h("div","ptext");prev.append(refs.preview);mw.append(prev);
+        // other way — questions only, no prompt box; ✕ returns to the prompt
+        const c=h("div","composer");c.style.position="relative";
+        const x=h("button","closex","✕");x.style.cssText="position:absolute;top:9px;right:11px;z-index:2";x.onclick=()=>{st.active=false;render();};c.append(x);
+        if(st.idx>=6){
+          const d=h("div","gen-row");d.style.color="var(--teal)";d.innerHTML=CHECK+"<span style='margin-left:4px;color:var(--ink)'>All questions answered</span>";c.append(d);
+          const prev=h("div","preview-card");prev.style.marginTop="10px";prev.append(Object.assign(h("div","plabel"),{textContent:"Starts the run with"}));prev.append(Object.assign(h("div","ptext"),{textContent:guidedPrompt()}));c.append(prev);
+        }else if(st.loading){c.append(genRow());}
+        else{
+          const qh=h("div","qhead");qh.append(h("span","qcount","Question "+(st.idx+1)+" of 6"));const tag=h("span","qtag "+(st.idx>=3?"gen":"fixed"));if(st.idx>=3)tag.innerHTML=SPK+" generated";else tag.textContent="fixed";qh.append(tag);c.append(qh);
+          c.append(h("div","qtext",ALL[st.idx].q));c.append(optionsEl(st.idx,v=>{st.ans[st.idx]=v;advance();}));
+          const sk=h("button","skiplink","Skip this question →");sk.onclick=()=>advance();c.append(sk);
+        }
+        c.append(controls(false));
+        mw.append(c);
       }
-      w.append(mw);root.append(w);updateMeta();
+      w.append(mw);root.append(w);updateSend();
     }
     render();
   }
@@ -227,8 +230,8 @@
     lab.append(Object.assign(h("span","mtag"),{textContent:tag}));card.append(lab);
     const screen=h("div","screen");card.append(screen);run(screen);host.append(card);
   }
-  mock("guide","①","Before — tap “Guide me”","real composer + pills",s=>guideFlow(s,false));
-  mock("guide","②","After — the optional questions","optional · typed+answers combine",s=>guideFlow(s,true));
+  mock("guide","①","The prompt way — box + Guide me pill","type a prompt · or tap Guide me",s=>guideFlow(s,false));
+  mock("guide","②","The guided way — questions only","no prompt box · ✕ returns to it",s=>guideFlow(s,true));
   mock("fork","","The run box with a corner “?”","hover / tap the “?”",s=>forkMock(s));
 })();
 </script>
