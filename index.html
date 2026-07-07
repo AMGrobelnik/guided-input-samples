@@ -42,7 +42,7 @@
   .vnote{font-size:.79rem;opacity:.72;margin:0 2px 9px;color:#33333d}
   @media (prefers-color-scheme:dark){.vnote{color:#cfcfd6}}
   :root[data-theme="dark"] .vnote{color:#cfcfd6}
-  .screen{background:var(--bg);border-radius:18px;padding:22px 16px 24px;box-shadow:0 10px 30px -16px rgba(0,0,0,.5);overflow:hidden}
+  .screen{background:var(--bg);border-radius:18px;padding:22px 16px 24px;box-shadow:0 10px 30px -16px rgba(0,0,0,.5);overflow:visible}
   .screen.tall{padding-top:28px}
 
   /* welcome + composer (real) */
@@ -123,13 +123,16 @@
   .qi svg{width:11px;height:11px} .qi .qtext-glyph{font-size:11px;font-weight:700;line-height:1}
   .qi.corner{position:absolute;top:11px;right:13px}
   .qi .dotm{position:absolute;top:-2px;right:-2px;width:6px;height:6px;border-radius:50%;border:1.5px solid #fff}
-  .fptip{margin-top:9px;border-radius:12px;border:1px solid var(--line2);background:#fff;padding:12px;
-    box-shadow:0 12px 30px -14px rgba(0,0,0,.4);font-size:12.5px;line-height:1.5;color:#374151;max-width:420px}
-  .fptip.above{margin-top:0;margin-bottom:9px}
+  /* hover/tap tooltip anchored to the box, hidden until the "?" is hovered */
+  .composer .fptip{position:absolute;left:12px;right:12px;z-index:40;text-align:left;
+    border-radius:12px;border:1px solid var(--line2);background:#fff;padding:11px 12px;
+    box-shadow:0 14px 34px -12px rgba(0,0,0,.45);font-size:12px;line-height:1.5;color:#374151;
+    opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .13s,transform .13s;pointer-events:none}
+  .composer .fptip.below{top:calc(100% + 8px)}
+  .composer .fptip.above{bottom:calc(100% + 8px);transform:translateY(-4px)}
+  .composer.tipopen .fptip{opacity:1;visibility:visible;transform:none;pointer-events:auto}
   .fptip .th{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted2);margin-bottom:6px}
   .fptip b.fork{color:var(--teal)} .fptip b.steer{color:var(--blue)}
-  .fpinline{font-size:12px;color:var(--muted2);margin-top:8px;padding-left:2px}
-  .fpinline b.fork{color:var(--teal)} .fpinline b.steer{color:var(--blue)}
   .runctx{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:9px}
 
   /* optional affordances */
@@ -143,6 +146,13 @@
   .escape:hover{color:var(--ink);background:rgba(0,0,0,.05)}
   .skiplink{border:0;background:transparent;color:var(--faint);font:inherit;font-size:12px;cursor:pointer;padding:8px 2px 0;text-align:left}
   .skiplink:hover{color:var(--muted2)}
+  .ta-real{width:100%;border:0;background:transparent;outline:none;resize:none;font:inherit;font-size:.9rem;color:var(--ink);min-height:42px;line-height:1.5}
+  .ta-real::placeholder{color:var(--ph)}
+  .opt-tray-head{display:flex;align-items:center;gap:9px;margin-bottom:11px;font-size:12px;color:var(--muted2)}
+  .optlabel{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--indigo-50);color:var(--indigo-700);border-radius:999px;padding:3px 9px;flex:none}
+  .preview-card{margin-top:10px;background:rgba(0,0,0,.025);border:1px dashed var(--line2);border-radius:12px;padding:11px 12px}
+  .plabel{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:6px}
+  .ptext{font-size:12.5px;line-height:1.5;color:var(--ink);white-space:pre-wrap}
   .svg-ico{stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 </style>
 
@@ -154,6 +164,9 @@
       (3 presets + a “type your answer” row — no separate “Other”). Fork/resume is now just a small <b>“?”</b>
       inside the input box (no “this will steer …” text). Scroll; each is live.</p>
   </div>
+
+  <div class="section-tab">★ Recommended — optional questions + your own prompt, combined</div>
+  <div id="featured"></div>
 
   <div class="section-tab">A · Guided questions in the composer — 10 variants</div>
   <div id="guided"></div>
@@ -316,14 +329,74 @@
     {placement:'takeover',optStyle:'numbered',header:'tag',name:'In-composer · numbered'},
     {placement:'takeover',optStyle:'list',header:'dots',name:'In-composer · progress dots'},
     {placement:'chat',optStyle:'list',header:'tag',name:'Conversational'},
-    {placement:'tray',optStyle:'grid',header:'tag',name:'Tray · 2-column grid'},
+    {placement:'tray',optStyle:'list',header:'tag',name:'Tray · one option per row'},
   ];
   mountAll("guided","A",GUIDED,"real composer + ReviewTypeList",(screen,cfg)=>guidedFlow(screen,cfg));
 
+  // ===== ★ recommended: optional questions + free-text, combined =====
+  function buildPrompt(typed,answers){
+    const answered=answers.map((a,i)=>a?{q:ALL[i].q,a}:null).filter(Boolean);
+    const t=(typed||"").trim();
+    if(!t&&!answered.length)return "— nothing yet — type above, and/or answer an optional question —";
+    if(t&&!answered.length)return t;
+    if(!t&&answered.length===6)return compose(answers);
+    const bullets=answered.map(x=>"• "+x.a).join("\n");
+    return t?(t+"\n\nGuided details:\n"+bullets):("Guided setup:\n"+bullets);
+  }
+  function refinedVariant(root){
+    const st={idx:0,ans:[],aiReady:false,loading:false,typed:""};
+    let previewEl=null,sendBtn=null;
+    const anyInput=()=>st.typed.trim()!==""||st.ans.some(Boolean);
+    function updateMeta(){if(previewEl)previewEl.textContent=buildPrompt(st.typed,st.ans);if(sendBtn)sendBtn.className="send "+(anyInput()?"on":"off");}
+    function advance(){if(st.idx===2&&!st.aiReady){st.idx=3;st.loading=true;render();setTimeout(()=>{st.loading=false;st.aiReady=true;render();},1000);return;}st.idx++;render();}
+    function render(){
+      root.innerHTML="";
+      const w=h("div","welcome");
+      w.append(Object.assign(h("div","greet"),{textContent:"Good afternoon"}));
+      w.append(Object.assign(h("div","subtitle"),{textContent:"Describe your run — and/or answer a few optional questions."}));
+      const mw=h("div","maxw");
+      // real editable composer — you can type here AND answer below
+      const c=h("div","composer");
+      const ta=document.createElement("textarea");ta.className="ta-real";ta.rows=2;
+      ta.placeholder="What would you like to invent?  (optional if you answer below)";ta.value=st.typed;
+      ta.oninput=e=>{st.typed=e.target.value;updateMeta();};
+      c.append(ta);
+      const row=h("div","crow");const att=h("button","attach");att.innerHTML=PLUS;row.append(att);
+      const sw=h("div","sendwrap");sendBtn=h("button","send off");sendBtn.innerHTML=UP;sw.append(sendBtn);row.append(sw);c.append(row);
+      mw.append(c);
+      // optional questions tray (one per row)
+      const tray=h("div","composer");tray.style.marginTop="8px";
+      const oh=h("div","opt-tray-head");oh.append(h("span","optlabel","Optional"));oh.append(h("span",null,"Answer any to guide the run — or skip them all"));tray.append(oh);
+      if(st.idx>=6){const d=h("div","gen-row");d.innerHTML=CHECK+"<span style='margin-left:4px;color:var(--muted2)'>all questions answered — edit above or send</span>";d.style.color="var(--teal)";tray.append(d);}
+      else if(st.loading){tray.append(genRow());}
+      else{
+        const qh=h("div","qhead");qh.append(h("span","qcount","Question "+(st.idx+1)+" of 6"));
+        const tag=h("span","qtag "+(st.idx>=3?"gen":"fixed"));if(st.idx>=3)tag.innerHTML=SPK+" generated";else tag.textContent="fixed";qh.append(tag);tray.append(qh);
+        tray.append(h("div","qtext",ALL[st.idx].q));
+        tray.append(optionsEl(st.idx,'list',v=>{st.ans[st.idx]=v;advance();}));
+        const sk=h("button","skiplink","Skip this question →");sk.onclick=()=>advance();tray.append(sk);
+      }
+      mw.append(tray);
+      // live "what will be sent" — merges typed prompt + whatever's answered (partial ok)
+      const prev=h("div","preview-card");prev.append(Object.assign(h("div","plabel"),{textContent:"Starts the run with"}));
+      previewEl=h("div","ptext");prev.append(previewEl);mw.append(prev);
+      w.append(mw);root.append(w);
+      updateMeta();
+    }
+    render();
+  }
+  (function(){
+    const host=document.getElementById("featured");const card=h("div","variant");
+    const lab=h("div","vlabel");lab.append(Object.assign(h("span","vname"),{textContent:"Optional questions + your own prompt — combined"}));
+    lab.append(Object.assign(h("span","tagreal"),{textContent:"handles typed + answers + partial"}));card.append(lab);
+    card.append(Object.assign(h("div","vnote"),{textContent:"Type a prompt, answer some questions, or both — the preview shows exactly what gets sent. Nothing is required."}));
+    const screen=h("div","screen tall");card.append(screen);refinedVariant(screen);host.append(card);
+  })();
+
   // ===== fork/resume: little "?" icon in the input box =====
   const FPTITLE="When you send";
-  function tipCard(style){
-    const t=h("div","fptip"+(style==='above'?" above":""));
+  function tipCard(pos){
+    const t=h("div","fptip "+(pos==='above'?"above":"below"));
     t.append(Object.assign(h("div","th"),{textContent:FPTITLE}));
     t.append(Object.assign(h("p",null),{innerHTML:"From a finished step this <b class='fork'>forks</b> a new run branched there; from the running step it <b class='steer'>continues</b> (steers) this one. Earlier work is carried over either way.",style:"margin:0"}));
     return t;
@@ -339,7 +412,10 @@
     const mw=h("div","maxw");mw.style.margin="0 auto";
     const c=h("div","composer");c.style.position="relative";
     const qi=makeQi(cfg);
-    // placeholder line, optionally with an inline "?" right after it
+    // hover (desktop) / tap (touch) the "?" to reveal the tooltip
+    qi.onmouseenter=()=>c.classList.add("tipopen");
+    qi.onmouseleave=()=>c.classList.remove("tipopen");
+    qi.onclick=(e)=>{e.stopPropagation();c.classList.toggle("tipopen");};
     const ta=h("div","ta ph");
     ta.style.display="flex";ta.style.alignItems="center";ta.style.gap="7px";
     ta.append(document.createTextNode("Message this run…"));
@@ -352,33 +428,25 @@
     if(cfg.pos==='attach-right')attWrap.append(qi);
     row.append(attWrap);
     const sw=h("div","sendwrap");
-    if(cfg.pos==='controls'){const spacer=h("div");spacer.style.flex="1";}
     if(cfg.pos==='send-left'||cfg.pos==='controls')sw.append(qi);
     const s=h("button","send on");s.innerHTML=UP;sw.append(s);row.append(sw);
     c.append(row);
-    mw.append(c);
-    const tipHost=h("div");mw.append(tipHost);
-    const show=()=>{tipHost.innerHTML="";if(cfg.tip==='inline'){const l=h("div","fpinline");l.innerHTML="Sending from a finished step <b class='fork'>forks</b> a new run; from the running step it <b class='steer'>steers</b> this one.";tipHost.append(l);}else{const card=tipCard(cfg.tip);if(cfg.tip==='above'){c.parentNode.insertBefore(card,c);setTimeout(()=>{},0);tipHost.remove?0:0;}else tipHost.append(card);}};
-    // simpler: always render below unless 'above'
-    tipHost.innerHTML="";
-    if(cfg.tip==='above'){const card=tipCard('above');mw.insertBefore(card,c);}
-    else if(cfg.tip==='inline'){const l=h("div","fpinline");l.innerHTML="Sending from a finished step <b class='fork'>forks</b> a new run; from the running step it <b class='steer'>steers</b> this one.";mw.append(l);}
-    else tipHost.append(tipCard('below'));
-    qi.onmouseenter=()=>qi.style.borderColor="var(--indigo-500)";
-    scr.append(mw);root.append(scr);
-    scr.append(Object.assign(h("div","cap"),{textContent:"hover the “?” · it explains fork vs steer, no module-name text"}));
+    c.append(tipCard(cfg.tipPos));   // the tooltip: hidden until the "?" is hovered/tapped
+    mw.append(c);scr.append(mw);
+    scr.append(Object.assign(h("div","cap"),{textContent:"hover (or tap) the “?” — the explainer appears only then"}));
+    root.append(scr);
   }
   const FORKV=[
-    {pos:'send-left',glyph:'q',tip:'below',name:'“?” left of the send button'},
-    {pos:'corner',glyph:'q',tip:'below',name:'“?” in the top-right corner'},
-    {pos:'inline',glyph:'q',tip:'below',name:'“?” after the placeholder'},
-    {pos:'send-left',glyph:'i',tip:'below',name:'“(i)” info icon by send'},
-    {pos:'attach-right',glyph:'q',tip:'above',name:'“?” next to the + button'},
-    {pos:'send-left',glyph:'q',tip:'below',dot:true,dotColor:'var(--teal)',name:'“?” with a mode dot'},
-    {pos:'corner',glyph:'fork',tip:'below',name:'fork glyph in the corner'},
-    {pos:'send-left',glyph:'q',tip:'inline',name:'“?” → one-line inline hint'},
-    {pos:'controls',glyph:'q',tip:'below',name:'“?” centered in the controls row'},
-    {pos:'inline',glyph:'i',tip:'above',name:'“(i)” after placeholder · tip above'},
+    {pos:'send-left',glyph:'q',tipPos:'above',name:'“?” left of the send button'},
+    {pos:'corner',glyph:'q',tipPos:'below',name:'“?” in the top-right corner'},
+    {pos:'inline',glyph:'q',tipPos:'above',name:'“?” right after the placeholder'},
+    {pos:'send-left',glyph:'i',tipPos:'above',name:'“(i)” info icon by send'},
+    {pos:'attach-right',glyph:'q',tipPos:'above',name:'“?” next to the + button'},
+    {pos:'send-left',glyph:'q',tipPos:'above',dot:true,dotColor:'var(--teal)',name:'“?” with a fork/steer mode dot'},
+    {pos:'corner',glyph:'fork',tipPos:'below',name:'fork glyph in the corner'},
+    {pos:'send-left',glyph:'q',tipPos:'below',name:'“?” left of send · tip below'},
+    {pos:'controls',glyph:'q',tipPos:'above',name:'“?” in the controls row'},
+    {pos:'inline',glyph:'i',tipPos:'below',name:'“(i)” after placeholder · tip below'},
   ];
   mountAll("forkresume","B",FORKV,"real composer · “?” in the box",(screen,cfg)=>forkVariant(screen,cfg));
 
