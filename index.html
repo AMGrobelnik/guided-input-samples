@@ -90,7 +90,7 @@
   @media (prefers-reduced-motion:reduce){.shim,.spark{animation:none}}
 
   /* fork/resume — corner "?" + clean hover tooltip, no captions */
-  .qi{width:19px;height:19px;border-radius:999px;border:1px solid var(--line2);color:var(--muted);display:grid;place-items:center;cursor:help;background:#fff;position:absolute;top:12px;right:13px;z-index:5}
+  .qi{width:19px;height:19px;border-radius:999px;border:1px solid var(--line2);color:var(--muted);display:grid;place-items:center;cursor:help;background:#fff;position:absolute;top:11px;right:14px;z-index:5}
   .qi:hover{border-color:var(--teal);color:var(--teal)} .qi .g{font-size:11px;font-weight:700;line-height:1}
   .composer .fptip{position:absolute;left:12px;right:12px;bottom:calc(100% + 8px);z-index:40;text-align:left;border-radius:12px;border:1px solid var(--line2);border-top:2px solid var(--teal);
     background:#fff;padding:11px 12px;box-shadow:0 14px 34px -12px rgba(0,0,0,.45);font-size:12px;line-height:1.5;color:#374151;
@@ -192,8 +192,8 @@
         EX.forEach(x=>{const p=h("span","pill");p.innerHTML='<span class="ico">'+x.ic+'</span>'+x.label;pills.append(p);});
         mw.append(pills);
       }else{
-        const tray=h("div","composer");tray.style.marginTop="8px";
-        const oh=h("div","opt-tray-head");oh.append(h("span","optlabel","Optional"));oh.append(h("span",null,"Answer any — or skip"));const x=h("button","closex","✕");x.style.marginLeft="auto";x.onclick=()=>{st.active=false;render();};oh.append(x);tray.append(oh);
+        const tray=h("div","composer");tray.style.marginTop="8px";tray.style.position="relative";
+        const x=h("button","closex","✕");x.style.cssText="position:absolute;top:9px;right:11px;z-index:2";x.onclick=()=>{st.active=false;render();};tray.append(x);
         if(st.idx>=6){const d=h("div","gen-row");d.style.color="var(--teal)";d.innerHTML=CHECK+"<span style='margin-left:4px;color:var(--muted2)'>all questions answered</span>";tray.append(d);}
         else if(st.loading){tray.append(genRow());}
         else{const qh=h("div","qhead");qh.append(h("span","qcount","Question "+(st.idx+1)+" of 6"));const tag=h("span","qtag "+(st.idx>=3?"gen":"fixed"));if(st.idx>=3)tag.innerHTML=SPK+" generated";else tag.textContent="fixed";qh.append(tag);tray.append(qh);
